@@ -47,7 +47,7 @@
     }
 }
 
-[data-flux-field]:not(ui-radio, ui-checkbox) {
+[data-flux-field] {
     @apply grid gap-2;
 }
 
@@ -65,6 +65,14 @@ input:focus[data-flux-control],
 textarea:focus[data-flux-control],
 select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+[data-flux-radio] {
+    @apply -mt-[1px];
+}
+
+[data-flux-checkbox] {
+    @apply -mt-[1px];
 }
 
 [data-flux-error] {
