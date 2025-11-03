@@ -9,7 +9,7 @@
     <flux:sidebar sticky collapsible stashable
         class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.header>
-            <flux:sidebar.brand href="{{ route('dashboard') }}" {{-- logo="{{ asset('icon-circle.png') }}"
+            <flux:sidebar.brand href="{{ route('artists') }}" {{-- logo="{{ asset('icon-circle.png') }}"
                 logo:dark="{{ asset('icon-circle-dark.png') }}" --}} name="Audio Archive" />
 
             <flux:sidebar.collapse
@@ -17,9 +17,34 @@
         </flux:sidebar.header>
 
         <flux:sidebar.nav>
-            <flux:sidebar.item icon="layout-dashboard" :href="route('dashboard')"
-                :current="request()->routeIs('dashboard')" wire:navigate>
-                Dashboard
+            {{-- <flux:sidebar.item icon="circle-user-round" :href="route('artists')" :current="request()->routeIs('artists')"
+                wire:navigate>
+                Artists
+            </flux:sidebar.item>
+
+            <flux:sidebar.item icon="disc-album" :href="route('artists')" :current="request()->routeIs('artists')"
+                wire:navigate>
+                Albums
+            </flux:sidebar.item>
+
+            <flux:sidebar.item icon="music-4" :href="route('artists')" :current="request()->routeIs('artists')"
+                wire:navigate>
+                Songs
+            </flux:sidebar.item>
+
+            <flux:sidebar.item icon="boom-box" :href="route('artists')" :current="request()->routeIs('artists')"
+                wire:navigate>
+                Genres
+            </flux:sidebar.item>
+
+            <flux:sidebar.item icon="library-big" :href="route('artists')" :current="request()->routeIs('artists')"
+                wire:navigate>
+                Playlists
+            </flux:sidebar.item> --}}
+
+            <flux:sidebar.item icon="upload" :href="route('artists')" :current="request()->routeIs('artists')"
+                wire:navigate>
+                Upload
             </flux:sidebar.item>
         </flux:sidebar.nav>
 

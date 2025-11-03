@@ -1,10 +1,11 @@
 <?php
 
 use Livewire\Volt\Volt;
+use App\Livewire\Artists;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
-    Route::view('/', 'dashboard')->name('dashboard');
+    Route::get('/', Artists::class)->name('artists');
 
     Route::redirect('settings', 'settings/profile');
 

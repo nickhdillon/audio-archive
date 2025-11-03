@@ -20,7 +20,7 @@ test('users can authenticate using the login screen', function () {
 
     $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect('/dashboard');
+        ->assertRedirect('/artists');
 
     $this->assertAuthenticated();
 });
