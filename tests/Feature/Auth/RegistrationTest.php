@@ -16,8 +16,7 @@ test('new users can register', function () {
         'password_confirmation' => 'password',
     ]);
 
-    $response->assertSessionHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+    $response->assertSessionHasNoErrors()->assertRedirect('/dashboard');
 
     $this->assertAuthenticated();
 });

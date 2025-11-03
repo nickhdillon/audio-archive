@@ -1,7 +1,6 @@
 <?php
 
 use Livewire\Volt\Volt;
-use App\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
