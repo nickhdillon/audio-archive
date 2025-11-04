@@ -38,7 +38,7 @@ it('can clear avatar', function () {
 it('can remove avatar', function () {
     $file = UploadedFile::fake()->image('test1.jpg');
 
-    $file_path = Storage::disk('s3')->putFile('avatars', $file);
+    $file_path = Storage::disk('s3')->putFile('users/1/avatars', $file);
 
     auth()->user()->update(['avatar' => basename($file_path)]);
 
@@ -48,7 +48,7 @@ it('can remove avatar', function () {
         ->assertHasNoErrors()
         ->assertRedirect();
 
-    $this->assertFalse(Storage::disk('s3')->exists("avatars/{$file->hashName()}"));
+    $this->assertFalse(Storage::disk('s3')->exists("users/1/avatars/{$file->hashName()}"));
 
     $this->assertNull(auth()->user()->avatar);
 });

@@ -2,10 +2,12 @@
 
 use Livewire\Volt\Volt;
 use App\Livewire\Artists;
+use App\Livewire\UploadAudio;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', Artists::class)->name('artists');
+    Route::get('/upload-audio', UploadAudio::class)->name('upload');
 
     Route::redirect('settings', 'settings/profile');
 

@@ -18,7 +18,7 @@ class Avatar extends Component
 
     public TemporaryUploadedFile|string|null $avatar = null;
 
-    public string $s3_path = 'avatars';
+    public string $s3_path = '';
 
     public bool $show_crop_avatar_modal = false;
 
@@ -40,6 +40,8 @@ class Avatar extends Component
 
     public function mount(): void
     {
+        $this->s3_path = 'users/' . auth()->id() . '/avatars';
+        
         $this->avatar = auth()->user()->avatar;
     }
 

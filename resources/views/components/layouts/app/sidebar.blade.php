@@ -42,7 +42,7 @@
                 Playlists
             </flux:sidebar.item> --}}
 
-            <flux:sidebar.item icon="upload" :href="route('artists')" :current="request()->routeIs('artists')"
+            <flux:sidebar.item icon="upload" :href="route('upload')" :current="request()->routeIs('upload')"
                 wire:navigate>
                 Upload
             </flux:sidebar.item>
@@ -54,7 +54,7 @@
         <flux:dropdown position="bottom" align="start">
             @if (auth()->user()->avatar)
                 <flux:sidebar.profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
-                    :avatar="Storage::disk('s3')->url('avatars/' . auth()->user()->avatar)"
+                    :avatar="Storage::disk('s3')->url('users/' . auth()->id() . '/avatars/' . auth()->user()->avatar)"
                     icon-trailing="chevrons-up-down" />
             @else
                 <flux:sidebar.profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
@@ -70,7 +70,7 @@
                                     class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                                     @if (auth()->user()->avatar)
                                         <img
-                                            src="{{ Storage::disk('s3')->url('avatars/' . auth()->user()->avatar) }}" />
+                                            src="{{ Storage::disk('s3')->url('users/' . auth()->id() . '/avatars/' . auth()->user()->avatar) }}" />
                                     @else
                                         <p>{{ auth()->user()->initials() }}</p>
                                     @endif
@@ -122,7 +122,7 @@
         <flux:dropdown position="top" align="end">
             @if (auth()->user()->avatar)
                 <flux:profile :initials="auth()->user()->initials()"
-                    :avatar="Storage::disk('s3')->url('avatars/' . auth()->user()->avatar)"
+                    :avatar="Storage::disk('s3')->url('users/' . auth()->id() . '/avatars/' . auth()->user()->avatar)"
                     icon-trailing="chevrons-up-down" />
             @else
                 <flux:profile :initials="auth()->user()->initials()" icon-trailing="chevrons-up-down" />
@@ -137,7 +137,7 @@
                                     class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                                     @if (auth()->user()->avatar)
                                         <img
-                                            src="{{ Storage::disk('s3')->url('avatars/' . auth()->user()->avatar) }}" />
+                                            src="{{ Storage::disk('s3')->url('users/' . auth()->id() . '/avatars/' . auth()->user()->avatar) }}" />
                                     @else
                                         <p>{{ auth()->user()->initials() }}</p>
                                     @endif
