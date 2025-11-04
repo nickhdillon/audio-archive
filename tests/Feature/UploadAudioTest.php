@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
+    Storage::fake('s3');
+    
     $this->actingAs(User::factory()->create());
 });
 
