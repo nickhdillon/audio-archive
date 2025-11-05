@@ -80,4 +80,13 @@ class User extends Authenticatable
             ->orderBy('artist')
             ->get();
     }
+
+    public function albums(): Collection
+    {
+        return $this->songs()
+            ->select('artist', 'album')
+            ->groupBy('artist', 'album')
+            ->orderBy('album')
+            ->get();
+    }
 }

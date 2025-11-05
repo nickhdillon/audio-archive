@@ -15,7 +15,7 @@
                     @foreach ($albums as $album)
                         <div class="col-span-6 sm:col-span-4 lg:col-span-3 space-y-1">
                             <flux:button variant="filled" class="size-40! border hover:border-neutral-300 border-neutral-200 dark:border-neutral-600 hover:dark:border-neutral-500 shadow-xs">
-                                <flux:icon.user class="text-neutral-400 inset-0 size-10" />
+                                <flux:icon.disc-2 class="text-neutral-400 inset-0 size-10" />
                             </flux:button>
             
                             <div class="flex flex-col w-40 truncate">
@@ -33,25 +33,25 @@
             </flux:tab.panel>
 
             <flux:tab.panel name="songs">
-                <div class="flex flex-col divide-y -mt-5 divide-neutral-200">
+                <div class="flex flex-col divide-y -mt-5 divide-neutral-200 dark:divide-neutral-600">
                     @foreach ($songs as $song)
-                        <a href="{{ route('artists') }}" wire:navigate class="flex items-center py-3 first:pt-0 last:pb-0 gap-2.5">
+                        <a href="{{ route('artists') }}" wire:navigate class="flex items-center group py-3 first:pt-0 last:pb-0 gap-2.5">
                             <div class="size-10 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
                                 <flux:icon.music-2 class="text-neutral-400 size-5" />
                             </div>
             
                             <div class="flex flex-col flex-1 min-w-0">
-                                <p class="text-sm">
+                                <p class="text-sm duration-200 ease-in-out group-hover:text-neutral-600 dark:group-hover:text-neutral-400">
                                     {{ $song->title }}
                                 </p>
             
-                                <div class="flex items-center space-x-1 text-xs text-neutral-600 dark:text-neutral-400 truncate">
+                                <p class="flex items-center space-x-1 text-xs text-neutral-600 dark:text-neutral-400 truncate">
                                     <span>{{ $song->artist }}</span>
             
                                     <span>·</span>
             
                                     <span class="truncate">{{ $song->album }}</span>
-                                </div>
+                                </p>
                             </div>
                         </a>
                     @endforeach

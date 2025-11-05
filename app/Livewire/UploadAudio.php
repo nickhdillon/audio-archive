@@ -63,7 +63,7 @@ class UploadAudio extends Component
                     'filename' => $file->getClientOriginalName(),
                     'title' => data_get($info, "tags.{$prefix}.title.0", 'Unknown Title'),
                     'album' => data_get($info, "tags.{$prefix}.album.0", 'Unknown Album'),
-                    'track_number' => data_get($info, "tags.{$prefix}.track_number.0", '1/12'),
+                    'track_number' => data_get($info, Str::before("tags.{$prefix}.track_number.0", '/'), '1/12'),
                     'playtime' => data_get($info, 'playtime_string', '3:30'),
                     'artist' => data_get($info, "tags.{$prefix}.artist.0", 'Unknown Artist'),
                     'genre' => data_get($info, "tags.{$prefix}.genre.0", 'Metal'),

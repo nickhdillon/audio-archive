@@ -10,8 +10,8 @@
                     <flux:icon.user class="text-neutral-400 inset-0 size-10" />
                 </flux:button>
 
-                <div class="flex flex-col w-40 text-wrap">
-                    <p class="text-sm">
+                <div class="flex flex-col w-40">
+                    <p class="text-sm truncate">
                         {{ $artist->artist }}
                     </p>
 
