@@ -10,7 +10,7 @@
                     <flux:icon.disc-2 class="text-neutral-400 inset-0 size-10" />
                 </flux:button>
 
-                <div class="flex flex-col w-40">
+                <div class="flex flex-col w-40 truncate">
                     <p class="text-sm truncate">
                         {{ $album->album }}
                     </p>
