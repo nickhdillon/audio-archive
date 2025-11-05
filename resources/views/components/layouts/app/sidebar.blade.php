@@ -9,8 +9,11 @@
     <flux:sidebar sticky collapsible stashable
         class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.header>
-            <flux:sidebar.brand href="{{ route('artists') }}" {{-- logo="{{ asset('icon-circle.png') }}"
-                logo:dark="{{ asset('icon-circle-dark.png') }}" --}} name="Audio Archive" />
+            <flux:sidebar.brand
+                href="{{ route('artists') }}"
+                logo="{{ asset('icon.png') }}"
+                name="Audio Archive"
+            />
 
             <flux:sidebar.collapse
                 class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
