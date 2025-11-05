@@ -89,7 +89,6 @@ class UploadAudio extends Component
                     's3'
                 );
 
-
                 return [...$meta, 'path' => $stored_path];
             })->toArray();
         

@@ -20,27 +20,27 @@
         </flux:sidebar.header>
 
         <flux:sidebar.nav>
-            {{-- <flux:sidebar.item icon="circle-user-round" :href="route('artists')" :current="request()->routeIs('artists')"
+            <flux:sidebar.item icon="circle-user-round" :href="route('artists')" :current="request()->routeIs('artists', 'artist*')"
                 wire:navigate>
                 Artists
             </flux:sidebar.item>
 
-            <flux:sidebar.item icon="disc-album" :href="route('artists')" :current="request()->routeIs('artists')"
+            {{-- <flux:sidebar.item icon="disc-album" :href="route('artists')" :current="request()->routeIs('artists')"
                 wire:navigate>
                 Albums
-            </flux:sidebar.item>
+            </flux:sidebar.item> --}}
 
-            <flux:sidebar.item icon="music-4" :href="route('artists')" :current="request()->routeIs('artists')"
+            {{-- <flux:sidebar.item icon="music-4" :href="route('artists')" :current="request()->routeIs('artists')"
                 wire:navigate>
                 Songs
-            </flux:sidebar.item>
+            </flux:sidebar.item> --}}
 
-            <flux:sidebar.item icon="boom-box" :href="route('artists')" :current="request()->routeIs('artists')"
+            {{-- <flux:sidebar.item icon="boom-box" :href="route('artists')" :current="request()->routeIs('artists')"
                 wire:navigate>
                 Genres
-            </flux:sidebar.item>
+            </flux:sidebar.item> --}}
 
-            <flux:sidebar.item icon="library-big" :href="route('artists')" :current="request()->routeIs('artists')"
+            {{-- <flux:sidebar.item icon="library-big" :href="route('artists')" :current="request()->routeIs('artists')"
                 wire:navigate>
                 Playlists
             </flux:sidebar.item> --}}

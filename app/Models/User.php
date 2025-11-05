@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
@@ -64,5 +66,18 @@ class User extends Authenticatable
     public function songs(): HasMany
     {
         return $this->hasMany(Song::class);
+    }
+
+    public function artists(): Collection
+    {
+        return $this->songs()
+            ->select(
+                'artist',
+                DB::raw('COUNT(*) as song_count'),
+                DB::raw('COUNT(DISTINCT album) as album_count')
+            )
+            ->groupBy('artist')
+            ->orderBy('artist')
+            ->get();
     }
 }
