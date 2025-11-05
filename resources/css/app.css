@@ -82,3 +82,28 @@ select:focus[data-flux-control] {
 [x-cloak] {
     display: none !important;
 }
+
+/* Filepond */
+.filepond--credits {
+    display: none;
+}
+
+.filepond--root {
+    @apply mb-0!;
+}
+
+.filepond--panel .filepond--panel-root {
+    @apply bg-neutral-50 border border-neutral-200!;
+}
+
+.filepond--drip-blob {
+    @apply bg-neutral-400!;
+}
+
+.filepond--drip-label {
+    @apply text-neutral-400!;
+}
+
+.filepond--label-action {
+    @apply decoration-neutral-600!;
+}

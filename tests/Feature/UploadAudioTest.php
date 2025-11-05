@@ -15,15 +15,6 @@ beforeEach(function () {
     $this->actingAs(User::factory()->create());
 });
 
-it('can remove file', function () {
-    $file = UploadedFile::fake()->image('test1.mp3');
-
-    livewire(UploadAudio::class)
-        ->set('files', [$file])
-        ->call('removeFile', 0)
-        ->assertHasNoErrors();
-});
-
 it('can upload and submit an mp3 file', function () {
     $file = UploadedFile::fake()->image('test1.mp3');
 
@@ -44,6 +35,13 @@ it('can upload and submit an m4a file', function () {
         ->assertHasNoErrors();
 
     $this->assertTrue(Storage::disk('s3')->exists("users/1/files/Unknown Artist/Unknown Album/{$file->getClientOriginalName()}"));
+});
+
+it('can validate an uploaded file', function () {
+    livewire(UploadAudio::class)
+        ->set('files', [UploadedFile::fake()->image('test3.mp3')])
+        ->call('validateUploadedFile')
+        ->assertHasNoErrors();
 });
 
 test('component can render', function () {

@@ -6,27 +6,14 @@
     <form wire:submit='submit' class="space-y-5">
         <div>
             <flux:field>
-                <flux:file-upload wire:model="files" multiple label="Upload files">
-                    <flux:file-upload.dropzone
-                        class="hover:bg-neutral-100 dark:hover:bg-neutral-600 cursor-pointer"
-                        heading="Drop files here or click to browse"
-                        text="MP3, M4A, JPG, PNG up to 100MB"
-                        with-progress
-                    />
-                </flux:file-upload>
-            </flux:field>
+                <x-filepond::upload
+                    wire:model="files"
+                    multiple
+                    :allow-image-transform="false"
+                />
 
-            @if ($files) 
-                <div class="mt-4 flex flex-col gap-2">
-                    @foreach ($files as $index => $file) 
-                        <flux:file-item :heading="$file->getClientOriginalName()">
-                            <x-slot name="actions">
-                                <flux:file-item.remove wire:click="removeFile({{ $index }})" />
-                            </x-slot>
-                        </flux:file-item>
-                    @endforeach
-                </div>
-            @endif
+                <flux:error name="files" />
+            </flux:field>
         </div>
 
         <div class="flex gap-2">

@@ -9,14 +9,14 @@ use Flux\Flux;
 use App\Models\Song;
 use Livewire\Component;
 use Illuminate\Support\Str;
-use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
 use Illuminate\Contracts\View\View;
+use Spatie\LivewireFilepond\WithFilePond;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class UploadAudio extends Component
 {
-    use WithFileUploads;
+    use WithFilePond;
 
     #[Validate([
         'files' => ['required', 'array'],
@@ -35,16 +35,11 @@ class UploadAudio extends Component
         ];
     }
 
-    public function removeFile(int $index): void
+    public function validateUploadedFile(): bool
     {
-        $file = $this->files[$index];
+        $this->validate();
 
-        $file->delete();
-
-        unset($this->files[$index], $this->metadata[$index]);
-
-        $this->files = array_values($this->files);
-        $this->metadata = array_values($this->metadata);
+        return true;
     }
 
     public function updatedFiles()
@@ -82,8 +77,6 @@ class UploadAudio extends Component
 
     public function submit(): void
     {
-        $this->validate();
-
         $records = collect($this->files)
             ->map(function (TemporaryUploadedFile $file, int $index): array {
                 $meta = $this->metadata[$index];

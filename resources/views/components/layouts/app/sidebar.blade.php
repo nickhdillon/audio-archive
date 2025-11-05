@@ -189,6 +189,7 @@
         </flux:toast.group>
     @endpersist
 
+    @filepondScripts
     @fluxScripts
 </body>
 
