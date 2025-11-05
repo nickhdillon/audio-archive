@@ -30,10 +30,10 @@
                 Albums
             </flux:sidebar.item>
 
-            {{-- <flux:sidebar.item icon="music-4" :href="route('artists')" :current="request()->routeIs('artists')"
+            <flux:sidebar.item icon="music-4" :href="route('songs')" :current="request()->routeIs('songs')"
                 wire:navigate>
                 Songs
-            </flux:sidebar.item> --}}
+            </flux:sidebar.item>
 
             {{-- <flux:sidebar.item icon="boom-box" :href="route('artists')" :current="request()->routeIs('artists')"
                 wire:navigate>
