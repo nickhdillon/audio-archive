@@ -7,10 +7,12 @@ use App\Models\User;
 use App\Models\Artist;
 use App\Livewire\Album;
 use App\Models\Album as ModelsAlbum;
-
 use function Pest\Livewire\livewire;
+use Illuminate\Support\Facades\Storage;
 
-beforeEach(function () {    
+beforeEach(function () {
+    Storage::fake('s3');
+
     $this->actingAs(
         User::factory()
             ->has(

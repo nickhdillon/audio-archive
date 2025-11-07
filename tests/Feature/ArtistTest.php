@@ -9,8 +9,11 @@ use App\Livewire\Artist;
 use Illuminate\Support\Str;
 use function Pest\Livewire\livewire;
 use App\Models\Artist as ModelsArtist;
+use Illuminate\Support\Facades\Storage;
 
-beforeEach(function () {    
+beforeEach(function () {
+    Storage::fake('s3');
+
     $this->actingAs(
         User::factory()
             ->has(
