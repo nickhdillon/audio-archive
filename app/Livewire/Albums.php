@@ -12,7 +12,11 @@ class Albums extends Component
     public function render(): View
     {
         return view('livewire.albums', [
-            'albums' => auth()->user()->albums()
+            'albums' => auth()
+                ->user()
+                ->albums()
+                ->with(['artist', 'songs'])
+                ->get()
         ]);
     }
 }

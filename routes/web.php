@@ -10,11 +10,12 @@ use App\Livewire\UploadAudio;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
+    Route::redirect('/', '/artists');
     Route::get('/artists', Artists::class)->name('artists');
-    Route::get('artists/{artist}', Artist::class)->name('artist');
+    Route::get('artists/{artist:slug}', Artist::class)->name('artist');
 
     Route::get('albums', Albums::class)->name('albums');
-    Route::get('albums/{album}', Album::class)->name('album');
+    Route::get('albums/{album:slug}', Album::class)->name('album');
 
     Route::get('songs', Songs::class)->name('songs');
     

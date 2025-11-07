@@ -5,18 +5,16 @@
     @include('partials.head')
 </head>
 
-<body class="min-h-screen bg-white dark:bg-zinc-800">
-    <flux:sidebar sticky collapsible stashable
-        class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+<body class="min-h-screen bg-white dark:bg-neutral-900">
+    <flux:sidebar sticky stashable
+        class="border-e border-neutral-200 bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800">
         <flux:sidebar.header>
             <flux:sidebar.brand
                 href="{{ route('artists') }}"
                 logo="{{ asset('icon.png') }}"
                 name="Audio Archive"
+                wire:navigate
             />
-
-            <flux:sidebar.collapse
-                class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
         </flux:sidebar.header>
 
         <flux:sidebar.nav>
@@ -118,7 +116,7 @@
 
     <!-- Mobile User Menu -->
     <flux:header class="lg:hidden">
-        <flux:sidebar.toggle class="lg:hidden text-zinc-800! dark:text-zinc-200!" icon="panel-left" inset="left" />
+        <flux:sidebar.toggle class="lg:hidden text-neutral-800! dark:text-neutral-200!" icon="panel-left" inset="left" />
 
         <flux:spacer />
 
@@ -189,8 +187,13 @@
         </flux:toast.group>
     @endpersist
 
+    @persist('audio-player')
+        <x-audio-player />
+    @endpersist
+
     @filepondScripts
     @fluxScripts
+    @livewireScriptConfig
 </body>
 
 </html>

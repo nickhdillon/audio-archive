@@ -5,38 +5,25 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use Livewire\Component;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
+use App\Models\Artist as ModelsArtist;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Artist extends Component
 {
-    public string $artist;
-
-    public Collection $albums;
-
-    public Collection $songs;
+    public ModelsArtist $artist;
 
     public function mount(): void
     {
-        $this->albums = auth()
-            ->user()
-            ->songs()
-            ->select(
-                'album',
-                DB::raw('COUNT(*) as song_count')
-            )
-            ->where('artist', $this->artist)
-            ->groupBy('album')
-            ->orderBy('album')
-            ->get();
-
-        $this->songs = auth()
-            ->user()
-            ->songs()
-            ->where('artist', $this->artist)
-            ->orderBy('title')
-            ->get();
+        $this->artist->loadMissing([
+            'albums' => function (HasMany $query): HasMany {
+                return $query->withCount('songs')->orderBy('name');
+            },
+            'songs' => function (HasManyThrough $query): HasManyThrough {
+                return $query->with('album.artist')->orderBy('title');
+            }
+        ]);
     }
 
     public function render(): View

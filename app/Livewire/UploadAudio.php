@@ -7,6 +7,8 @@ namespace App\Livewire;
 use getID3;
 use Flux\Flux;
 use App\Models\Song;
+use App\Models\Album;
+use App\Models\Artist;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
@@ -49,7 +51,8 @@ class UploadAudio extends Component
         $this->metadata = collect($this->files)
             ->map(function (TemporaryUploadedFile $file) use ($get_ID3): array {
                 $path = $file->getRealPath();
-                $extension = Str::afterLast($path, '.');
+                $extension = $file->getClientOriginalExtension();
+                $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
                 $prefix = match ($extension) {
                     'mp3' => 'id3v2',
@@ -60,10 +63,10 @@ class UploadAudio extends Component
 
                 return [
                     'user_id' => auth()->id(),
-                    'filename' => $file->getClientOriginalName(),
+                    'filename' => Str::slug($filename) . ".{$extension}",
                     'title' => data_get($info, "tags.{$prefix}.title.0", 'Unknown Title'),
                     'album' => data_get($info, "tags.{$prefix}.album.0", 'Unknown Album'),
-                    'track_number' => data_get($info, Str::before("tags.{$prefix}.track_number.0", '/'), '1/12'),
+                    'track_number' => Str::before(data_get($info, "tags.{$prefix}.track_number.0", '1/12'), '/'),
                     'playtime' => data_get($info, 'playtime_string', '3:30'),
                     'artist' => data_get($info, "tags.{$prefix}.artist.0", 'Unknown Artist'),
                     'genre' => data_get($info, "tags.{$prefix}.genre.0", 'Metal'),
@@ -77,22 +80,46 @@ class UploadAudio extends Component
 
     public function submit(): void
     {
-        $records = collect($this->files)
-            ->map(function (TemporaryUploadedFile $file, int $index): array {
+        collect($this->files)
+            ->map(function (TemporaryUploadedFile $file, int $index): void {
                 $meta = $this->metadata[$index];
 
-                $s3_path = 'users/' . auth()->id() . "/files/{$meta['artist']}/{$meta['album']}";
-        
+                $artist = Artist::firstOrCreate(
+                    [
+                        'slug' => Str::slug($meta['artist']),
+                        'user_id' => auth()->id(),
+                    ],
+                    ['name' => $meta['artist']]
+                );
+    
+                $album = Album::firstOrCreate(
+                    [
+                        'slug' => Str::slug($meta['album']),
+                        'artist_id' => $artist->id,
+                    ],
+                    ['name' => $meta['album']]
+                );
+
+                $s3_path = 'users/' . auth()->id() . '/files/'
+                    . Str::slug($artist->name) . '/'
+                    . Str::slug($album->name);
+                
                 $stored_path = $file->storePubliclyAs(
                     $s3_path,
                     $meta['filename'],
-                    's3'
+                    's3',
                 );
 
-                return [...$meta, 'path' => $stored_path];
+                Song::create([
+                    'album_id' => $album->id,
+                    'title' => $meta['title'],
+                    'slug' => Str::slug($meta['title']),
+                    'filename' => $meta['filename'],
+                    'track_number' => $meta['track_number'],
+                    'playtime' => $meta['playtime'],
+                    'path' => $stored_path,
+                ]);
             })->toArray();
-        
-        Song::insert($records);
 
         Flux::toast(
             variant: 'success',

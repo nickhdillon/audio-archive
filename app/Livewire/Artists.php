@@ -12,7 +12,11 @@ class Artists extends Component
     public function render(): View
     {
         return view('livewire.artists', [
-            'artists' => auth()->user()->artists()
+            'artists' => auth()
+                ->user()
+                ->artists()
+                ->withCount(['albums', 'songs'])
+                ->get()
         ]);
     }
 }

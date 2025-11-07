@@ -14,19 +14,17 @@ class Song extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'filename',
+        'album_id',
         'title',
-        'album',
-        'track_number',
+        'slug',
+        'filename',
         'playtime',
-        'artist',
-        'genre',
+        'track_number',
         'path'
     ];
 
-    public function user(): BelongsTo
+    public function album(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Album::class);
     }
 }

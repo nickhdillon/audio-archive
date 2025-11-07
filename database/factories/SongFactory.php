@@ -2,9 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Album;
 use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,22 +18,20 @@ class SongFactory extends Factory
      */
     public function definition(): array
     {
+        $album = Album::factory()->create();
+        $artist = $album->artist;
+
         $filename = Str::slug($this->faker->words(2, true)) . '.mp3';
-        $album = $this->faker->sentence(2, true);
-        $artist = $this->faker->name;
+        $title = $this->faker->sentence(3, true);
 
         return [
-            'user_id' => User::factory(),
+            'album_id' => $album->id,
+            'title' => $title,
+            'slug' => Str::slug($title),
             'filename' => $filename,
-            'title' => $this->faker->sentence(3, true),
-            'album' => $album,
-            'track_number' => $this->faker->numberBetween(1, 15),
             'playtime' => '3:30',
-            'artist' => $artist,
-            'genre' => Arr::random([
-                'Pop', 'Rock', 'Hip-Hop', 'Jazz', 'Classical', 'Electronic', 'Country', 'R&B'
-            ]),
-            'path' => "users/1/files/{$artist}/{$album}/{$filename}"
+            'track_number' => $this->faker->numberBetween(1, 15),
+            'path' => "users/{$artist->user_id}/files/{$artist->name}/{$album->name}/{$filename}",
         ];
     }
 }

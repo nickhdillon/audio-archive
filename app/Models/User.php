@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
@@ -63,30 +63,25 @@ class User extends Authenticatable
             ->implode('');
     }
 
-    public function songs(): HasMany
+    public function artists(): HasMany
     {
-        return $this->hasMany(Song::class);
+        return $this->hasMany(Artist::class);
     }
 
-    public function artists(): Collection
+    public function albums(): HasManyThrough
     {
-        return $this->songs()
-            ->select(
-                'artist',
-                DB::raw('COUNT(*) as song_count'),
-                DB::raw('COUNT(DISTINCT album) as album_count')
-            )
-            ->groupBy('artist')
-            ->orderBy('artist')
-            ->get();
+        return $this->hasManyThrough(Album::class, Artist::class);
     }
 
-    public function albums(): Collection
+    public function songs(): LengthAwarePaginator
     {
-        return $this->songs()
-            ->select('artist', 'album')
-            ->groupBy('artist', 'album')
-            ->orderBy('album')
-            ->get();
+        return Song::query()
+            ->whereRelation('album.artist', 'user_id', $this->id)
+            ->with([
+                'album:id,title,artist_id,name',
+                'album.artist:id,name'
+            ])
+            ->orderBy('title')
+            ->paginate(20);
     }
 }

@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 use App\Models\User;
 use App\Models\Song;
+use App\Models\Album;
+use App\Models\Artist;
 use App\Livewire\Songs;
-
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {    
     $this->actingAs(
         User::factory()
-        ->has(Song::factory(5))
-        ->create()
+            ->has(
+                Artist::factory()
+                    ->has(Album::factory()
+                        ->has(Song::factory(5))
+                    )
+                )
+            ->create()
     );
 });
 
