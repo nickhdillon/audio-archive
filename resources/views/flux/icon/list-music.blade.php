@@ -39,6 +39,9 @@ $strokeWidth = match ($variant) {
     aria-hidden="true"
     data-slot="icon"
 >
-    <rect x="14" y="3" width="5" height="18" rx="1" />
-    <rect x="5" y="3" width="5" height="18" rx="1" />
+  <path d="M16 5H3" />
+  <path d="M11 12H3" />
+  <path d="M11 19H3" />
+  <path d="M21 16V5" />
+  <circle cx="18" cy="16" r="3" />
 </svg>

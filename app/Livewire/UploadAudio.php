@@ -93,10 +93,7 @@ class UploadAudio extends Component
                 );
     
                 $album = Album::firstOrCreate(
-                    [
-                        'slug' => Str::slug($meta['album']),
-                        'artist_id' => $artist->id,
-                    ],
+                    ['slug' => Str::slug($meta['album'])],
                     ['name' => $meta['album']]
                 );
 
