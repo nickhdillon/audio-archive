@@ -188,7 +188,7 @@
     @endpersist
 
     @persist('audio-player')
-        <x-audio-player />
+        <livewire:audio-player />
     @endpersist
 
     @filepondScripts

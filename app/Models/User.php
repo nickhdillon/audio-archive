@@ -84,4 +84,9 @@ class User extends Authenticatable
             ->orderBy('title')
             ->paginate(20);
     }
+
+    public function queue(): HasMany
+    {
+        return $this->hasMany(SongQueue::class);
+    }
 }
