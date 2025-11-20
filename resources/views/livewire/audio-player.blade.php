@@ -110,40 +110,36 @@
 
                 <flux:modal name="queue" variant="flyout">
                     <div class="space-y-6 text-xs">
-                        <template x-if="queue.length === 0 || !currentPath">
+                        <div x-show="!currentSong()">
                             <p class="text-neutral-800 dark:text-neutral-100 text-sm">
                                 Queue is empty
                             </p>
-                        </template>
+                        </div>
 
-                        <template x-if="queue.length > 0 && currentPath">
-                            <div>
+                        <div x-show="queue.length > 0 && currentPath" class="space-y-6">
+                            <div x-show="currentSong()">
                                 <flux:heading class="mb-2 text-sm">Now Playing</flux:heading>
 
-                                <template x-if="queue.length > 0 && queue[currentIndex]">
-                                    <div class="flex items-center gap-2.5">
-                                        <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
-                                            <flux:icon.music-2 class="text-neutral-400 size-4" />
-                                        </div>
-
-                                        <div class="flex flex-col flex-1 min-w-0">
-                                            <p class="font-medium text-accent truncate" x-text="queue[currentIndex].title"></p>
-                                            <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="queue[currentIndex].artist"></p>
-                                        </div>
+                                <div class="flex items-center gap-2.5">
+                                    <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
+                                        <flux:icon.music-2 class="text-neutral-400 size-4" />
                                     </div>
-                                </template>
+                
+                                    <div class="flex flex-col flex-1 min-w-0">
+                                        <p class="font-medium text-accent truncate" x-text="currentSong().title"></p>
+                                        <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="currentSong().artist"></p>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div x-show="queue.length > currentIndex + 1">
+                            <div>
                                 <flux:heading class="mb-2 text-sm">Up Next</flux:heading>
-
+                    
                                 <div class="space-y-3">
                                     <template x-for="(song, i) in queue.slice(currentIndex + 1)" :key="i">
                                         <div class="flex items-center gap-6">
-                                            <flux:icon.text-align-justify
-                                                class="cursor-move size-4 -mr-3 text-neutral-100"
-                                            />
-
+                                            <flux:icon.text-align-justify class="cursor-move size-4 -mr-3 text-neutral-100" />
+                    
                                             <button
                                                 x-on:click="changeSongByIndex(currentIndex + 1 + i)"
                                                 class="flex flex-1 min-w-0 text-left cursor-pointer items-center group gap-2.5"
@@ -151,18 +147,18 @@
                                                 <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
                                                     <flux:icon.music-2 class="text-neutral-400 size-4" />
                                                 </div>
-
+                    
                                                 <div class="flex flex-col flex-1 min-w-0">
                                                     <p class="duration-200 ease-in-out truncate group-hover:text-neutral-600 dark:group-hover:text-neutral-400" x-text="song.title"></p>
                                                     <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="song.artist"></p>
                                                 </div>
                                             </button>
-
+                    
                                             <flux:dropdown>
                                                 <flux:button variant="ghost" size="sm" class="hover:bg-transparent! -mr-1 w-2! cursor-pointer">
                                                     <flux:icon.ellipsis-horizontal class="text-neutral-800 dark:text-neutral-100" />
                                                 </flux:button>
-
+                    
                                                 <flux:menu>
                                                     <flux:menu.item
                                                         icon="trash"
@@ -178,7 +174,7 @@
                                     </template>
                                 </div>
                             </div>
-                        </template>
+                        </div>
                     </div>
                 </flux:modal>
             </div>
@@ -249,6 +245,9 @@
                     this.restoreCurrentSong();
                     this.setupEventListeners();
                     this.restoreMuted();
+                    
+                    // console.log(this.queue);
+                    // console.log(this.upNext());
                 },
 
                 restoreCurrentSong() {
@@ -321,24 +320,16 @@
                     document.addEventListener('queue-updated', (e) => {
                         const previousLength = this.queue.length;
                         const currentSongId = this.queue[this.currentIndex]?.id;
-                        
+
                         this.queue = e.detail.queue;
-                        
-                        const newIndex = this.queue.findIndex(item => item.id === currentSongId);
-                        
+
+                        const newIndex = this.queue.findIndex(s => s.id === currentSongId);
+
                         if (newIndex !== -1) this.currentIndex = newIndex;
-                        
+
                         if (previousLength === 0 && this.queue.length === 1) {
                             this.currentIndex = 0;
                             this.changeSongByIndex(0);
-
-                            return;
-                        }
-
-                        if (this.queue.length > previousLength) {
-                            const lastIndex = this.queue.length - 1;
-                            this.currentIndex = lastIndex;
-                            this.changeSongByIndex(lastIndex);
 
                             return;
                         }
@@ -509,6 +500,18 @@
                     document.addEventListener('mousemove', move);
                     document.addEventListener('mouseup', stop);
                 },
+
+                hasCurrent() {
+                    return this.currentIndex >= 0 && this.currentIndex < this.queue.length;
+                },
+
+                currentSong() {
+                    return this.hasCurrent() ? this.queue[this.currentIndex] : null;
+                },
+
+                upNext() {
+                    return this.hasCurrent() ? this.queue.slice(this.currentIndex + 1) : [];
+                }
             };
         });
     </script>
