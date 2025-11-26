@@ -117,62 +117,72 @@
                         </div>
 
                         <div x-show="queue.length > 0 && currentPath" class="space-y-6">
-                            <div x-show="currentSong()">
-                                <flux:heading class="mb-2 text-sm">Now Playing</flux:heading>
-
-                                <div class="flex items-center gap-2.5">
-                                    <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
-                                        <flux:icon.music-2 class="text-neutral-400 size-4" />
-                                    </div>
-                
-                                    <div class="flex flex-col flex-1 min-w-0">
-                                        <p class="font-medium text-accent truncate" x-text="currentSong().title"></p>
-                                        <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="currentSong().artist"></p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <flux:heading class="mb-2 text-sm">Up Next</flux:heading>
-                    
-                                <div class="space-y-3">
-                                    <template x-for="(song, i) in queue.slice(currentIndex + 1)" :key="i">
-                                        <div class="flex items-center gap-6">
-                                            <flux:icon.text-align-justify class="cursor-move size-4 -mr-3 text-neutral-100" />
-                    
-                                            <button
-                                                x-on:click="changeSongByIndex(currentIndex + 1 + i)"
-                                                class="flex flex-1 min-w-0 text-left cursor-pointer items-center group gap-2.5"
-                                            >
-                                                <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
-                                                    <flux:icon.music-2 class="text-neutral-400 size-4" />
-                                                </div>
-                    
-                                                <div class="flex flex-col flex-1 min-w-0">
-                                                    <p class="duration-200 ease-in-out truncate group-hover:text-neutral-600 dark:group-hover:text-neutral-400" x-text="song.title"></p>
-                                                    <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="song.artist"></p>
-                                                </div>
-                                            </button>
-                    
-                                            <flux:dropdown>
-                                                <flux:button variant="ghost" size="sm" class="hover:bg-transparent! -mr-1 w-2! cursor-pointer">
-                                                    <flux:icon.ellipsis-horizontal class="text-neutral-800 dark:text-neutral-100" />
-                                                </flux:button>
-                    
-                                                <flux:menu>
-                                                    <flux:menu.item
-                                                        icon="trash"
-                                                        icon:variant="micro"
-                                                        class="text-xs"
-                                                        x-on:click="$wire.removeFromQueue(song.id)"
-                                                    >
-                                                        Remove from queue
-                                                    </flux:menu.item>
-                                                </flux:menu>
-                                            </flux:dropdown>
+                            <div class="space-y-3" x-sort="$wire.handleSort($item, $position)">
+                                <div x-show="currentSong()">
+                                    <flux:heading class="mb-2 text-sm">Now Playing</flux:heading>
+    
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
+                                            <flux:icon.music-2 class="text-neutral-400 size-4" />
                                         </div>
-                                    </template>
+                    
+                                        <div class="flex flex-col flex-1 min-w-0">
+                                            <p class="font-medium text-accent truncate" x-text="currentSong()?.title"></p>
+                                            <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="currentSong()?.artist"></p>
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <flux:heading class="mb-2 text-sm">Up Next</flux:heading>
+
+                                @foreach ($this->queue() as $song)
+                                    <div class="flex items-center gap-6"
+                                        x-show="{{ $loop->index }} > currentIndex"
+                                        x-sort:item="{{ $song['id'] }}"
+                                        wire:key='{{ $song['id'] }}'
+                                    >
+                                        <span class="cursor-move" x-sort:handle>
+                                            <flux:icon.text-align-justify class="cursor-move size-4 -mr-3 text-neutral-100" />
+                                        </span>
+
+                                        <button
+                                            x-on:click="changeSongByIndex({{ $loop->index }})"
+                                            x-sort:ignore
+                                            class="flex flex-1 min-w-0 text-left cursor-pointer items-center group gap-2.5"
+                                        >
+                                            <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
+                                                <flux:icon.music-2 class="text-neutral-400 size-4" />
+                                            </div>
+                
+                                            <div class="flex flex-col flex-1 min-w-0">
+                                                <p class="duration-200 ease-in-out truncate group-hover:text-neutral-600 dark:group-hover:text-neutral-400">
+                                                    {{ $song['title'] }}
+                                                </p>
+
+                                                <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate">
+                                                    {{ $song['artist'] }}
+                                                </p>
+                                            </div>
+                                        </button>
+
+                                        <flux:dropdown>
+                                            <flux:button variant="ghost" size="sm" class="hover:bg-transparent! -mr-1 w-2! cursor-pointer">
+                                                <flux:icon.ellipsis-horizontal class="text-neutral-800 dark:text-neutral-100" />
+                                            </flux:button>
+                
+                                            <flux:menu>
+                                                <flux:menu.item
+                                                    icon="trash"
+                                                    icon:variant="micro"
+                                                    class="text-xs"
+                                                    x-on:click="$dispatch('remove-from-queue', { id: {{ $song['id'] }} })"
+                                                >
+                                                    Remove from queue
+                                                </flux:menu.item>
+                                            </flux:menu>
+                                        </flux:dropdown>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -245,9 +255,6 @@
                     this.restoreCurrentSong();
                     this.setupEventListeners();
                     this.restoreMuted();
-                    
-                    // console.log(this.queue);
-                    // console.log(this.upNext());
                 },
 
                 restoreCurrentSong() {

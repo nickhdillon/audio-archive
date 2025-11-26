@@ -10,8 +10,9 @@ use App\Models\SongQueue;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Collection;
-use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Renderless;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 
 class AudioPlayer extends Component
@@ -43,7 +44,29 @@ class AudioPlayer extends Component
             });
     }
 
-    #[On('add-to-queue'), Renderless]
+    public function handleSort(int $item, int $position): void
+    {
+        $song = SongQueue::findOrFail($item);
+
+        DB::transaction(function () use ($song, $position): void {
+            $current = $song->position;
+            $after = $position;
+
+            if ($current === $after) return;
+
+            $song->update(['position' => -1]);
+
+            $block = SongQueue::whereBetween('position', [min($current, $after), max($current, $after)]);
+
+            $need_to_shift_down = $current < $after;
+
+            $need_to_shift_down ? $block->decrement('position') : $block->increment('position');
+
+            $song->update(['position' => $after]);
+        });
+    }
+
+    #[On('add-to-queue')]
     public function addToQueue(int $song_id): void
     {
         $user_id = auth()->id();
@@ -73,7 +96,7 @@ class AudioPlayer extends Component
         );
     }
 
-    #[Renderless]
+    #[On('remove-from-queue')]
     public function removeFromQueue(int $id): void
     {
         $user_id = auth()->id();

@@ -1,7 +1,6 @@
 import Cropper from "cropperjs";
 import 'cropperjs/src/css/cropper.css';
-import sort from '@alpinejs/sort'
-import '@wotz/livewire-sortablejs';
+import sort from '@alpinejs/sort';
 
 import '../../vendor/spatie/livewire-filepond/resources/dist/filepond.css';
 import '../../vendor/spatie/livewire-filepond/resources/dist/filepond';

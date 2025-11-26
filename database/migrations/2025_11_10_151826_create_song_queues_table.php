@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Song::class)->constrained()->cascadeOnDelete();
-            $table->unsignedInteger('position')->default(0);
+            $table->integer('position')->default(0);
             $table->timestamps();
 
             $table->unique(['user_id', 'song_id']);
