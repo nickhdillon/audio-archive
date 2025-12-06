@@ -108,7 +108,7 @@
                     </flux:button>
                 </flux:modal.trigger>
 
-                <flux:modal name="queue" variant="flyout">
+                <flux:modal name="queue" flyout variant="floating">
                     <div class="space-y-6 text-xs">
                         <div x-show="!currentSong()">
                             <p class="text-neutral-800 dark:text-neutral-100 text-sm">
@@ -142,7 +142,7 @@
                                         wire:key='{{ $song['id'] }}'
                                     >
                                         <span class="cursor-move" x-sort:handle>
-                                            <flux:icon.text-align-justify class="cursor-move size-4 -mr-3 text-neutral-100" />
+                                            <flux:icon.text-align-justify class="cursor-move size-4 -mr-3 dark:text-neutral-100" />
                                         </span>
 
                                         <button
@@ -172,10 +172,14 @@
                 
                                             <flux:menu>
                                                 <flux:menu.item
+                                                    variant="danger"
                                                     icon="trash"
                                                     icon:variant="micro"
                                                     class="text-xs"
-                                                    x-on:click="$dispatch('remove-from-queue', { id: {{ $song['id'] }} })"
+                                                    x-on:click="
+                                                        $flux.modal('queue').close();
+                                                        $dispatch('remove-from-queue', { id: {{ $song['id'] }} })
+                                                    "
                                                 >
                                                     Remove from queue
                                                 </flux:menu.item>
