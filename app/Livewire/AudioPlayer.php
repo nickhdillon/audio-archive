@@ -50,7 +50,7 @@ class AudioPlayer extends Component
 
         DB::transaction(function () use ($song, $position): void {
             $current = $song->position;
-            $after = $position;
+            $after = $position - 1;
 
             if ($current === $after) return;
 

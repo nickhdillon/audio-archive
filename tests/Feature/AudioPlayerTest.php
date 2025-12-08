@@ -39,9 +39,9 @@ it('can sort songs in the queue', function () {
         ->call('handleSort', $song_1->id, 3)
         ->assertHasNoErrors();
 
-    expect(SongQueue::find($song_1->id)->position)->toBe(3);
+    expect(SongQueue::find($song_1->id)->position)->toBe(2);
     expect(SongQueue::find($song_2->id)->position)->toBe(1);
-    expect(SongQueue::find($song_3->id)->position)->toBe(2);
+    expect(SongQueue::find($song_3->id)->position)->toBe(3);
 });
 
 it('can add a song to the queue', function () {
