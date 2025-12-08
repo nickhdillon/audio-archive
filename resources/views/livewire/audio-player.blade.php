@@ -39,7 +39,10 @@
     <div class="hidden relative backdrop-blur-sm border-t border-neutral-400/30 dark:border-neutral-500/30 bg-neutral-400/70 dark:bg-neutral-700/60 sm:grid grid-cols-12 gap-4 items-center shadow-lg p-2.5">
         <div class="flex items-center col-span-3 gap-3">
             <div class="size-13 shrink-0 border border-neutral-100 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
-                <flux:icon.music-2 class="text-neutral-400 size-6" />
+                <img x-cloak x-show="currentArtwork" :src="currentArtwork"
+                    class="object-cover inset-0 rounded-[3px] w-full" />
+            
+                <flux:icon.music-2 x-cloak x-show="!currentArtwork" class="text-neutral-400 size-6" />
             </div>
 
             <div class="flex flex-col -space-y-[2px] text-[12px] truncate">
@@ -108,7 +111,7 @@
                     </flux:button>
                 </flux:modal.trigger>
 
-                <flux:modal name="queue" flyout variant="floating">
+                <flux:modal name="queue" flyout variant="floating" class="max-w-[400px]">
                     <div class="space-y-6 text-xs">
                         <div x-show="!currentSong()">
                             <p class="text-neutral-800 dark:text-neutral-100 text-sm">
@@ -123,7 +126,10 @@
     
                                     <div class="flex items-center gap-2.5">
                                         <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
-                                            <flux:icon.music-2 class="text-neutral-400 size-4" />
+                                            <img x-cloak x-show="currentArtwork" :src="currentArtwork"
+                                                class="object-cover inset-0 rounded-[3px] w-full" />
+                                        
+                                            <flux:icon.music-2 x-cloak x-show="!currentArtwork" class="text-neutral-400 size-4" />
                                         </div>
                     
                                         <div class="flex flex-col flex-1 min-w-0">
@@ -151,7 +157,11 @@
                                             class="flex flex-1 min-w-0 text-left cursor-pointer items-center group gap-2.5"
                                         >
                                             <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
-                                                <flux:icon.music-2 class="text-neutral-400 size-4" />
+                                                @if ($song['artwork'])
+                                                    <img src="{{ $song['artwork'] }}" class="object-cover inset-0 rounded-[3px] w-full" />
+                                                @else
+                                                    <flux:icon.music-2 class="text-neutral-400 size-4" />
+                                                @endif
                                             </div>
                 
                                             <div class="flex flex-col flex-1 min-w-0">
@@ -238,6 +248,7 @@
                 currentArtist: null,
                 currentPath: null,
                 currentPlaytime: null,
+                currentArtwork: null,
                 currentTimeDisplay: '0:00',
 
                 restoreTime: true,
@@ -249,6 +260,7 @@
                     artist: 'player-current-artist',
                     path: 'player-current-path',
                     playtime: 'player-current-playtime',
+                    artwork: 'player-current-artwork',
                     muted: 'player-muted',
                 },
 
@@ -271,6 +283,7 @@
                         this.currentArtist = localStorage.getItem(this.keys.artist);
                         this.currentPath = storedPath;
                         this.currentPlaytime = localStorage.getItem(this.keys.playtime);
+                        this.currentArtwork = localStorage.getItem(this.keys.artwork);
                         this.audio.src = storedPath;
                     }
                 },
@@ -380,6 +393,7 @@
                     this.currentArtist = song.artist;
                     this.currentPath = song.path;
                     this.currentPlaytime = song.playtime;
+                    this.currentArtwork = song.artwork;
 
                     this.audio.src = song.path;
                     this.restoreTime = false;
@@ -405,6 +419,7 @@
                     this.currentArtist = song.artist;
                     this.currentPath = song.path;
                     this.currentPlaytime = song.playtime;
+                    this.currentArtwork = song.artwork;
 
                     this.audio.src = song.path;
                     this.restoreTime = false;
@@ -443,6 +458,7 @@
                     localStorage.setItem(this.keys.artist, this.currentArtist);
                     localStorage.setItem(this.keys.path, this.currentPath);
                     localStorage.setItem(this.keys.playtime, this.currentPlaytime);
+                    localStorage.setItem(this.keys.artwork, this.currentArtwork);
                 },
 
                 clearTime() {

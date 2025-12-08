@@ -78,7 +78,7 @@ class User extends Authenticatable
         return Song::query()
             ->whereRelation('album.artist', 'user_id', $this->id)
             ->with([
-                'album:id,title,artist_id,name',
+                'album:id,title,artist_id,name,artwork_url',
                 'album.artist:id,name'
             ])
             ->orderBy('title')

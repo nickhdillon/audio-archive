@@ -11,7 +11,6 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Renderless;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,8 +25,8 @@ class AudioPlayer extends Component
             ->user()
             ->queue()
             ->with([
-                'song:id,title,album_id,playtime,path',
-                'song.album:id,name,artist_id',
+                'song:id,title,album_id,display_artist,playtime,path',
+                'song.album:id,name,artist_id,artwork_url',
                 'song.album.artist:id,name',
             ])
             ->orderBy('position')
@@ -37,9 +36,10 @@ class AudioPlayer extends Component
                 return [
                     'id' => $item->id,
                     'title' => $item->song->title,
-                    'artist' => $item->song->album->artist->name,
+                    'artist' => $item->song->display_artist,
                     'path' => $disk->url($item->song->path),
                     'playtime' => $item->song->playtime,
+                    'artwork' => $item->song->album->artwork_url
                 ];
             });
     }

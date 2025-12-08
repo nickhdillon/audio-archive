@@ -17,6 +17,7 @@ class Song extends Model
         'album_id',
         'title',
         'slug',
+        'display_artist',
         'filename',
         'playtime',
         'track_number',

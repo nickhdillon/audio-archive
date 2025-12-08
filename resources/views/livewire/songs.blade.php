@@ -11,14 +11,20 @@
                         @js([
                             'id' => $song->id,
                             'title' => $song->title,
-                            'artist' => $song->album->artist->name,
+                            'artist' => $song->display_artist,
                             'path' => Storage::disk('s3')->url($song->path),
-                            'playtime' => $song->playtime
+                            'playtime' => $song->playtime,
+                            'artwork' => $song->album->artwork_url
                         ])
                     })"
                 >
-                    <div class="size-10 bg-neutral-100 dark:bg-neutral-700 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
-                        <flux:icon.music-2 class="text-neutral-400 size-5" />
+                    <div class="size-10 bg-neutral-100 dark:bg-neutral-700 rounded-sm border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
+                        @if ($song->album->artwork_url)
+                            <img src="{{ $song->album->artwork_url }}"
+                                class="object-cover inset-0 rounded-[3px] w-full" />
+                        @else
+                            <flux:icon.music-2 class="text-neutral-400 size-5" />
+                        @endif
                     </div>
 
                     <div class="flex flex-col flex-1 min-w-0">
@@ -27,7 +33,7 @@
                         </p>
 
                         <p class="text-xs space-x-0.5 text-neutral-600 dark:text-neutral-400 truncate">
-                            <span>{{ $song->album->artist->name }}</span>
+                            <span>{{ $song->display_artist }}</span>
 
                             <span>·</span>
 
@@ -37,7 +43,13 @@
                 </button>
 
                 <button x-on:click="$dispatch('add-to-queue', { song_id: {{ $song->id }} })" class="cursor-pointer group">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 stroke-current group-hover:stroke-neutral-500 duration-100 ease-in-out"><path d="M16 5H3"/><path d="M11 12H3"/><path d="M16 19H3"/><path d="M18 9v6"/><path d="M21 12h-6"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 stroke-current group-hover:stroke-neutral-500 duration-100 ease-in-out">
+                        <path d="M16 5H3"/>
+                        <path d="M11 12H3"/>
+                        <path d="M16 19H3"/>
+                        <path d="M18 9v6"/>
+                        <path d="M21 12h-6"/>
+                    </svg>
                 </button>
             </div>
         @endforeach

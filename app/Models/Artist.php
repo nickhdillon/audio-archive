@@ -17,6 +17,7 @@ class Artist extends Model
         'user_id',
         'name',
         'slug',
+        'artwork_url'
     ];
 
     public function user(): BelongsTo
