@@ -16,7 +16,7 @@ class Artists extends Component
                 ->user()
                 ->artists()
                 ->withCount(['albums', 'songs'])
-                ->get()
+                ->paginate(50)
         ]);
     }
 }

@@ -19,7 +19,7 @@ new class extends Component {
 
         $albums->each(function (Album $album) use ($disk) : void {
             $artwork_url = Http::get("https://itunes.apple.com/search", [
-                'term' => "{$album->slug}+{$album->artist->slug}",
+                'term' => "{$album->slug} {$album->artist->slug}",
                 'entity' => 'album',
                 'attribute' => 'albumTerm',
                 'limit' => 1,
