@@ -7,13 +7,14 @@
 
     <div class="flex items-center space-x-3">
         <label for="avatar"
-            class="relative @if ($avatar) cursor-normal! @else cursor-pointer @endif">
+            class="relative @if ($avatar) cursor-normal! @else cursor-pointer @endif"
+        >
             @if (!$avatar)
                 <flux:input type="file" wire:model="avatar" class="sr-only!" id="avatar" />
             @endif
 
             @if ($avatar)
-                <img src="{{ $this->avatarUrl() }}" alt="Avatar" class="rounded-xl size-24 mt-2" id="avatar" />
+                <img src="{{ $this->avatarUrl() }}" alt="Avatar" class="rounded-xl size-24 mt-2" />
             @else
                 <div
                     class="flex items-center justify-center bg-zinc-100 hover:bg-zinc-200 duration-100 ease-in-out rounded-xl border dark:border-white/10 dark:bg-white/10 dark:hover:bg-zinc-800 size-24 mt-2">

@@ -39,8 +39,13 @@
     <div class="hidden relative backdrop-blur-sm border-t border-neutral-400/30 dark:border-neutral-500/30 bg-neutral-400/70 dark:bg-neutral-700/60 sm:grid grid-cols-12 gap-4 items-center shadow-lg p-2.5">
         <div class="flex items-center col-span-3 gap-3">
             <div class="size-13 shrink-0 border border-neutral-100 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
-                <img x-cloak x-show="currentArtwork" :src="currentArtwork"
-                    class="object-cover inset-0 rounded-[3px] w-full" />
+                <img
+                    x-cloak
+                    x-show="currentArtwork"
+                    :src="`{{ config('filesystems.disks.s3.url') }}${currentArtwork}`"
+                    class="object-cover inset-0 rounded-[3px] w-full"
+                    loading='lazy'
+                />
             
                 <flux:icon.music-2 x-cloak x-show="!currentArtwork" class="text-neutral-400 size-6" />
             </div>
@@ -126,8 +131,13 @@
     
                                     <div class="flex items-center gap-2.5">
                                         <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
-                                            <img x-cloak x-show="currentArtwork" :src="currentArtwork"
-                                                class="object-cover inset-0 rounded-[3px] w-full" />
+                                            <img
+                                                x-cloak
+                                                x-show="currentArtwork"
+                                                :src="`{{ config('filesystems.disks.s3.url') }}${currentArtwork}`"
+                                                class="object-cover inset-0 rounded-[3px] w-full"
+                                                loading='lazy'
+                                            />
                                         
                                             <flux:icon.music-2 x-cloak x-show="!currentArtwork" class="text-neutral-400 size-4" />
                                         </div>
@@ -139,7 +149,13 @@
                                     </div>
                                 </div>
 
-                                <flux:heading class="mb-2 text-sm">Up Next</flux:heading>
+                                <flux:heading
+                                    x-cloak
+                                    x-show="queue.length > 0 && currentIndex < queue.length - 1"
+                                    class="mb-2 text-sm"
+                                >
+                                    Up Next
+                                </flux:heading>
 
                                 @foreach ($this->queue() as $song)
                                     <div class="flex items-center gap-6"
@@ -158,7 +174,7 @@
                                         >
                                             <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
                                                 @if ($song['artwork'])
-                                                    <img src="{{ $song['artwork'] }}" class="object-cover inset-0 rounded-[3px] w-full" />
+                                                    <img src="{{ config('filesystems.disks.s3.url') . $song['artwork'] }}" class="object-cover inset-0 rounded-[3px] w-full" />
                                                 @else
                                                     <flux:icon.music-2 class="text-neutral-400 size-4" />
                                                 @endif

@@ -21,7 +21,11 @@
                                 ])
                             >
                                 @if ($album->artwork_url)
-                                    <img src="{{ $album->artwork_url }}" class="object-cover inset-0 rounded-[7px] w-full" />
+                                    <img
+                                        src="{{ config('filesystems.disks.s3.url') . $album->artwork_url }}"
+                                        class="object-cover inset-0 rounded-[7px] w-full"
+                                        loading='lazy'
+                                    />
                                 @else
                                     <flux:icon.disc-2 class="text-neutral-400 inset-0 size-10" />
                                 @endif
@@ -57,8 +61,11 @@
                             })" class="flex items-center text-left cursor-pointer group gap-2.5">
                                 <div class="size-10 bg-neutral-100 dark:bg-neutral-700 rounded-sm border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
                                     @if ($song->album->artwork_url)
-                                        <img src="{{ $song->album->artwork_url }}"
-                                            class="object-cover inset-0 rounded-[3px] w-full" />
+                                        <img
+                                            src="{{ config('filesystems.disks.s3.url') . $song->album->artwork_url }}"
+                                            class="object-cover inset-0 rounded-[3px] w-full"
+                                            loading='lazy'
+                                        />
                                     @else
                                         <flux:icon.music-2 class="text-neutral-400 size-5" />
                                     @endif

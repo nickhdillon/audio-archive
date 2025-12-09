@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Artist::class)->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('slug');
+            $table->string('artwork_url')->nullable();
             $table->timestamps();
         });
     }

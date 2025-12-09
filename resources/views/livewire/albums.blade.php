@@ -13,7 +13,11 @@
                     ])
                 >
                     @if ($album->artwork_url)
-                        <img src="{{ $album->artwork_url }}" class="object-cover inset-0 rounded-[7px] w-full" />
+                        <img
+                            src="{{ config('filesystems.disks.s3.url') . $album->artwork_url }}"
+                            class="object-cover inset-0 rounded-[7px] w-full"
+                            loading='lazy'
+                        />
                     @else
                         <flux:icon.disc-2 class="text-neutral-400 inset-0 size-10" />
                     @endif

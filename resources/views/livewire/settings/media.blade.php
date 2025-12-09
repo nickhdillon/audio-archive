@@ -4,16 +4,20 @@ use App\Models\Album;
 use Illuminate\Support\Str;
 use Livewire\Volt\Component;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 new class extends Component {
     public function fetchAlbumArtwork(): void
     {
+        $disk = Storage::disk('s3');
+
         $albums = auth()->user()
             ->albums()
-            ->with('artist:id,slug')
+            ->with('artist:id,slug,artwork_url')
+            ->whereNull('artwork_url')
             ->get();
 
-        $albums->each(function (Album $album): void {
+        $albums->each(function (Album $album) use ($disk) : void {
             $artwork_url = Http::get("https://itunes.apple.com/search", [
                 'term' => "{$album->slug}+{$album->artist->slug}",
                 'entity' => 'album',
@@ -23,8 +27,14 @@ new class extends Component {
 
             if ($artwork_url) {
                 $artwork_url = Str::replace('100x100bb.jpg', '2000x2000bb.jpg', $artwork_url);
-        
-                $album->update(['artwork_url' => $artwork_url]);
+
+                $path = '/users/' . auth()->id() . "/files/{$album->artist->slug}/{$album->slug}/artwork.jpg";
+
+                $image = Http::get($artwork_url)->body();
+
+                $disk->put($path, $image, 'public');
+
+                $album->update(['artwork_url' => $path]);
             }
         });
 

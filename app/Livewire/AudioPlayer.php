@@ -25,9 +25,8 @@ class AudioPlayer extends Component
             ->user()
             ->queue()
             ->with([
-                'song:id,title,album_id,display_artist,playtime,path',
-                'song.album:id,name,artist_id,artwork_url',
-                'song.album.artist:id,name',
+                'song:id,title,user_id,album_id,display_artist,playtime,path',
+                'song.album:id,name,artwork_url'
             ])
             ->orderBy('position')
             ->oldest()
