@@ -1,12 +1,35 @@
 <div class="space-y-4 max-w-4xl mb-16 mx-auto">
-    <flux:heading size="xl">
-        {{ $album->name }}
-    </flux:heading>
+    <div class="flex items-center justify-between">
+        <flux:heading size="xl">
+            {{ $playlist->name }}
+        </flux:heading>
 
-    <div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-600">
-        @foreach ($album->songs as $song)
-            <div class="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
-                <button class="flex text-left cursor-pointer flex-1 min-w-0 items-center group gap-2.5"
+        <div>
+            <flux:modal.trigger name="{{ 'edit-playlist' . $playlist->id }}">
+                <flux:button icon="pencil-square" variant="primary" size="sm">
+                    Edit
+                </flux:button>
+            </flux:modal.trigger>
+
+            <livewire:playlist-form :$playlist/>
+        </div>
+    </div>
+
+    <div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-600"
+        x-sort="$wire.handleSort($item, $position)"
+    >
+        @forelse ($songs as $song)
+            <div class="flex items-center justify-between py-3 gap-4 first:pt-0 last:pb-0"
+                x-sort:item="{{ $song->id }}"
+                wire:key='{{ $song->id }}'
+            >
+                <span class="cursor-move" x-sort:handle>
+                    <flux:icon.text-align-justify class="cursor-move size-4 -mr-1 dark:text-neutral-100" />
+                </span>
+
+                <button
+                    x-sort:ignore
+                    class="flex text-left flex-1 min-w-0 cursor-pointer items-center group gap-2.5"
                     x-on:click="$dispatch('change-song', { song: 
                         @js([
                             'id' => $song->id,
@@ -14,7 +37,7 @@
                             'artist' => $song->display_artist,
                             'path' => Storage::disk('s3')->url($song->path),
                             'playtime' => $song->playtime,
-                            'artwork' => $album->artwork_url
+                            'artwork' => $song->album->artwork_url
                         ])
                     })"
                 >
@@ -31,12 +54,16 @@
                     </div>
 
                     <div class="flex flex-col flex-1 min-w-0">
-                        <p class="text-sm duration-200 truncate ease-in-out group-hover:text-neutral-600 dark:group-hover:text-neutral-400">
-                            {{ $song->track_number }}. {{ $song->title }}
+                        <p class="text-sm truncate duration-200 ease-in-out group-hover:text-neutral-600 dark:group-hover:text-neutral-400">
+                            {{ $song->title }}
                         </p>
 
-                        <p class="text-xs text-neutral-600 dark:text-neutral-400 truncate">
-                            {{ $song->display_artist }}
+                        <p class="text-xs space-x-0.5 text-neutral-600 dark:text-neutral-400 truncate">
+                            <span>{{ $song->display_artist }}</span>
+
+                            <span>·</span>
+
+                            <span>{{ $song->album->name }}</span>
                         </p>
                     </div>
                 </button>
@@ -82,8 +109,16 @@
                     </flux:dropdown>                    
                 </div>
             </div>
-        @endforeach
+        @empty
+            <div class="text-center text-sm font-medium italic">
+                No songs found...
+            </div>
+        @endforelse
     </div>
 
     <livewire:playlist-form />
+
+    @if ($songs->count()) 
+        <flux:pagination :paginator="$songs" class="border-neutral-200! dark:border-neutral-600! -mt-1" />
+    @endif
 </div>

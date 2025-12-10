@@ -36,9 +36,9 @@
         </div>
     </div>
 
-    <div class="hidden relative backdrop-blur-sm border-t border-neutral-400/30 dark:border-neutral-500/30 bg-neutral-400/70 dark:bg-neutral-700/60 sm:grid grid-cols-12 gap-4 items-center shadow-lg p-2.5">
+    <div class="hidden relative backdrop-blur-sm border-t border-neutral-400/30 dark:border-neutral-500/30 bg-neutral-500/70 dark:bg-neutral-700/60 sm:grid grid-cols-12 gap-4 items-center shadow-lg p-2.5">
         <div class="flex items-center col-span-3 gap-3">
-            <div class="size-13 shrink-0 border border-neutral-100 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
+            <div class="size-13 shrink-0 border border-neutral-300 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
                 <img
                     x-cloak
                     x-show="currentArtwork"

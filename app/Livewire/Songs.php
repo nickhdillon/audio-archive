@@ -6,11 +6,12 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Traits\ManagesPlaylists;
 use Illuminate\Contracts\View\View;
 
 class Songs extends Component
 {
-    use WithPagination;
+    use WithPagination, ManagesPlaylists;
 
     public function render(): View
     {

@@ -27,11 +27,11 @@ class Artist extends Model
 
     public function albums(): HasMany
     {
-        return $this->hasMany(Album::class);
+        return $this->hasMany(Album::class)->orderBy('name');
     }
 
     public function songs(): HasManyThrough
     {
-        return $this->hasManyThrough(Song::class, Album::class);
+        return $this->hasManyThrough(Song::class, Album::class)->orderBy('title');
     }
 }

@@ -13,7 +13,9 @@
             <flux:tab.panel name="albums">
                 <div class="grid grid-cols-12 -mt-5 gap-6">
                     @foreach ($artist->albums as $album)
-                        <div class="col-span-6 sm:col-span-4 lg:col-span-3 space-y-1">
+                        <div class="col-span-6 sm:col-span-4 lg:col-span-3 space-y-1"
+                            wire:key='{{ $album->id }}'
+                        >
                             <flux:button :href="route('album', $album)" wire:navigate variant="filled"
                                 @class([
                                     'p-0!' => $album->artwork_url,
@@ -48,17 +50,21 @@
             <flux:tab.panel name="songs">
                 <div class="flex flex-col divide-y -mt-5 divide-neutral-200 dark:divide-neutral-600">
                     @foreach ($artist->songs as $song)
-                        <div class="flex items-center justify-between py-3 first:pt-0 last:pb-0">
-                            <button x-on:click="$dispatch('change-song', { song: 
-                                @js([
-                                    'id' => $song->id,
-                                    'title' => $song->title,
-                                    'artist' => $song->display_artist,
-                                    'path' => Storage::disk('s3')->url($song->path),
-                                    'playtime' => $song->playtime,
-                                    'artwork' => $song->album->artwork_url
-                                ])
-                            })" class="flex items-center text-left cursor-pointer group gap-2.5">
+                        <div class="flex items-center gap-4 justify-between py-3 first:pt-0 last:pb-0"
+                            wire:key='{{ $song->id }}'
+                        >
+                            <button class="flex items-center text-left cursor-pointer flex-1 min-w-0 group gap-2.5"
+                                x-on:click="$dispatch('change-song', { song: 
+                                    @js([
+                                        'id' => $song->id,
+                                        'title' => $song->title,
+                                        'artist' => $song->display_artist,
+                                        'path' => Storage::disk('s3')->url($song->path),
+                                        'playtime' => $song->playtime,
+                                        'artwork' => $song->album->artwork_url
+                                    ])
+                                })"
+                            >
                                 <div class="size-10 bg-neutral-100 dark:bg-neutral-700 rounded-sm border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
                                     @if ($song->album->artwork_url)
                                         <img
@@ -86,19 +92,52 @@
                                 </div>
                             </button>
 
-                            <button x-on:click="$dispatch('add-to-queue', { song_id: {{ $song->id }} })" class="cursor-pointer group">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 stroke-current group-hover:stroke-neutral-500 duration-100 ease-in-out">
-                                    <path d="M16 5H3"/>
-                                    <path d="M11 12H3"/>
-                                    <path d="M16 19H3"/>
-                                    <path d="M18 9v6"/>
-                                    <path d="M21 12h-6"/>
-                                </svg>
-                            </button>
+                            <div class="flex items-center gap-3">
+                                <flux:dropdown>
+                                    <flux:button variant="ghost" size="sm" class="hover:bg-transparent! -mr-1 w-2! cursor-pointer">
+                                        <flux:icon.ellipsis-horizontal class="text-neutral-800 dark:text-neutral-100" />
+                                    </flux:button>
+            
+                                    <flux:menu>
+                                        <flux:menu.submenu icon="plus" heading="Add to playlist">
+                                            <flux:menu.radio.group class="flex flex-col">
+                                                <flux:modal.trigger name="add-playlist">
+                                                    <button
+                                                        class="flex w-full items-center gap-2 px-2.5 py-1.5 font-medium text-sm text-start rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-600 group"
+                                                        type="button"
+                                                    >
+                                                        <flux:icon.plus class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
+                                                    
+                                                        <p>New playlist</p>
+                                                    </button>
+                                                </flux:modal.trigger>
+                                                
+                                                @foreach ($playlists as $playlist) 
+                                                    <button
+                                                        class="px-2.5 py-1.5 font-medium text-sm text-start rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-600"
+                                                        wire:click='addToPlaylist({{ $playlist->id }}, {{ $song->id }})'
+                                                    >
+                                                        {{ $playlist->name }}
+                                                    </button>
+                                                @endforeach
+                                            </flux:menu.radio.group>
+                                        </flux:menu.submenu>
+            
+                                        <flux:menu.item
+                                            icon="list-plus"
+                                            x-on:click="$dispatch('add-to-queue', { song_id: {{ $song->id }} })"
+                                        >
+                                            Add to queue
+                                        </flux:menu.item>
+                                    </flux:menu>
+                                </flux:dropdown>                    
+                            </div>
                         </div>
                     @endforeach
                 </div>
             </flux:tab.panel>
         </flux:tab.group>
     </div>
+
+    <livewire:playlist-form />
 </div>

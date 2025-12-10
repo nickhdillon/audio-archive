@@ -6,6 +6,8 @@ use Livewire\Volt\Volt;
 use App\Livewire\Artist;
 use App\Livewire\Albums;
 use App\Livewire\Artists;
+use App\Livewire\Playlist;
+use App\Livewire\Playlists;
 use App\Livewire\UploadAudio;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +20,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('albums/{album:slug}', Album::class)->name('album');
 
     Route::get('songs', Songs::class)->name('songs');
+
+    Route::get('playlists', Playlists::class)->name('playlists');
+    Route::get('playlists/{playlist:slug}', Playlist::class)->name('playlist');
     
     Route::get('/upload-audio', UploadAudio::class)->name('upload');
 
