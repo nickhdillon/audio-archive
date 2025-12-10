@@ -1,8 +1,16 @@
 <div class="space-y-4 max-w-4xl mb-16 mx-auto">
     <div class="flex items-center justify-between">
-        <flux:heading size="xl">
-            {{ $playlist->name }}
-        </flux:heading>
+        <div class="flex items-center gap-3">
+            <flux:heading size="xl">
+                {{ $playlist->name }}
+            </flux:heading>
+
+            <button class="focus:outline-none cursor-pointer bg-neutral-100 flex items-center justify-center rounded-full size-7"
+                wire:click='play'
+            >
+                <flux:icon.play class="size-[15px] stroke-neutral-800! fill-neutral-800!"/>
+            </button>
+        </div>
 
         <div>
             <flux:modal.trigger name="{{ 'edit-playlist' . $playlist->id }}">
@@ -75,7 +83,7 @@
                         </flux:button>
 
                         <flux:menu>
-                            <flux:menu.submenu icon="plus" heading="Add to playlist">
+                            <flux:menu.submenu icon="plus-circle" heading="Add to playlist">
                                 <flux:modal.trigger name="add-playlist">
                                     <button
                                         class="flex w-full items-center gap-2 px-2.5 py-1.5 font-medium text-sm text-start rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-600 group"

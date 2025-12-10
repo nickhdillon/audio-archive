@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\User;
 use App\Models\Song;
+use App\Models\SongQueue;
 use App\Livewire\Playlist;
 use App\Models\PlaylistSong;
 use function Pest\Livewire\livewire;
@@ -36,6 +37,38 @@ test('can see songs', function () {
     livewire(Playlist::class, ['playlist' => $playlist])
         ->assertSee($playlist->songs()->first()->title)
         ->assertHasNoErrors();
+});
+
+it('can play a playlist', function () {
+    $playlist = ModelsPlaylist::first();
+    
+    foreach ($playlist->songs as $song) {
+        SongQueue::create([
+            'user_id' => 1,
+            'song_id' => $song->id
+        ]);
+    }
+
+    expect(SongQueue::count())->toBe(3);
+
+    $playlist_2 = ModelsPlaylist::factory()->for(User::first())->create();
+
+    $songs = Song::factory(4)->create();
+
+    foreach ($songs as $i => $song) {
+        PlaylistSong::factory()->create([
+            'playlist_id' => $playlist_2->id,
+            'song_id' => $song->id,
+            'position' => $i + 1,
+        ]);
+    }
+
+    livewire(Playlist::class, ['playlist' => $playlist_2])
+        ->call('play')
+        ->assertDispatched('start-playlist')
+        ->assertHasNoErrors();
+
+    expect(SongQueue::count())->toBe(4);
 });
 
 it('can sort songs in the queue', function () {

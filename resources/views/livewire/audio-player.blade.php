@@ -42,7 +42,7 @@
                 <img
                     x-cloak
                     x-show="currentArtwork"
-                    :src="`{{ config('filesystems.disks.s3.url') }}${currentArtwork}`"
+                    :src="currentArtwork"
                     class="object-cover inset-0 rounded-[3px] w-full"
                     loading='lazy'
                 />
@@ -134,7 +134,7 @@
                                             <img
                                                 x-cloak
                                                 x-show="currentArtwork"
-                                                :src="`{{ config('filesystems.disks.s3.url') }}${currentArtwork}`"
+                                                :src="currentArtwork"
                                                 class="object-cover inset-0 rounded-[3px] w-full"
                                                 loading='lazy'
                                             />
@@ -174,7 +174,7 @@
                                         >
                                             <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
                                                 @if ($song['artwork'])
-                                                    <img src="{{ config('filesystems.disks.s3.url') . $song['artwork'] }}" class="object-cover inset-0 rounded-[3px] w-full" />
+                                                    <img src="{{ $song['artwork'] }}" class="object-cover inset-0 rounded-[3px] w-full" />
                                                 @else
                                                     <flux:icon.music-2 class="text-neutral-400 size-4" />
                                                 @endif
@@ -372,6 +372,35 @@
                             this.changeSongByIndex(0);
 
                             return;
+                        }
+                    });
+
+                    document.addEventListener('start-playlist', (e) => {
+                        this.queue = e.detail.queue;
+
+                        localStorage.removeItem(this.keys.index);
+                        localStorage.removeItem(this.keys.title);
+                        localStorage.removeItem(this.keys.artist);
+                        localStorage.removeItem(this.keys.path);
+                        localStorage.removeItem(this.keys.playtime);
+                        localStorage.removeItem(this.keys.artwork);
+                        localStorage.removeItem(this.keys.time);
+
+                        this.currentIndex = 0;
+                        this.currentTitle = null;
+                        this.currentArtist = null;
+                        this.currentPath = null;
+                        this.currentPlaytime = null;
+                        this.currentArtwork = null;
+                        this.progress = 0;
+                        this.currentTimeDisplay = '0:00';
+                        this.restoreTime = true;
+                        this.playing = false;
+                        this.dragging = false;
+                        this.dragProgress = null;
+
+                        if (this.queue.length > 0) {
+                            this.changeSongByIndex(0);
                         }
                     });
 
