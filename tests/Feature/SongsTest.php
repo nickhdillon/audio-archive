@@ -27,9 +27,18 @@ beforeEach(function () {
     );
 });
 
-test('can see songs', function () {
+it('can see songs', function () {
     livewire(Songs::class)
-        ->assertSee(Song::first()->title)
+        ->assertSeeText(Song::first()->title)
+        ->assertHasNoErrors();
+});
+
+it('can search songs', function () {
+    $song_title = Song::first()->title;
+
+    livewire(Songs::class)
+        ->set('search', $song_title)
+        ->assertSeeText($song_title)
         ->assertHasNoErrors();
 });
 

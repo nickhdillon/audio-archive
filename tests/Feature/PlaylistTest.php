@@ -31,11 +31,22 @@ beforeEach(function () {
     $this->actingAs($user);
 });
 
-test('can see songs', function () {
+it('can see songs', function () {
 	$playlist = ModelsPlaylist::first();
 
     livewire(Playlist::class, ['playlist' => $playlist])
         ->assertSee($playlist->songs()->first()->title)
+        ->assertHasNoErrors();
+});
+
+it('can search songs', function () {
+	$playlist = ModelsPlaylist::first();
+
+    $song_title = $playlist->songs()->first()->title;
+
+    livewire(Playlist::class, ['playlist' => $playlist])
+        ->set('search', $song_title)
+        ->assertSeeText($song_title)
         ->assertHasNoErrors();
 });
 

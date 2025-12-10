@@ -1,7 +1,17 @@
 <div class="space-y-4 max-w-4xl mb-16 mx-auto">
-    <flux:heading size="xl">
-        Albums
-    </flux:heading>
+    <div class="flex items-center justify-between gap-6">
+        <flux:heading size="xl">
+            Albums
+        </flux:heading>
+
+        <flux:input
+            icon="magnifying-glass"
+            placeholder="Search..."
+            wire:model.live.debounce.300ms='search'
+            clearable
+            class="max-w-[250px]!"
+        />
+    </div>
 
     <div class="grid grid-cols-12 gap-6">
         @foreach ($albums as $album)

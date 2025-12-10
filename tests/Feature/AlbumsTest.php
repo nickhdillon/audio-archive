@@ -26,9 +26,18 @@ beforeEach(function () {
     );
 });
 
-test('can see albums', function () {
+it('can see albums', function () {
     livewire(Albums::class)
-        ->assertSee(Str::headline(Album::first()->name))
+        ->assertSeeText(Str::headline(Album::first()->name))
+        ->assertHasNoErrors();
+});
+
+it('can search albums', function () {
+    $album_name = Album::first()->name;
+
+    livewire(Albums::class)
+        ->set('search', $album_name)
+        ->assertSeeText(Str::headline($album_name))
         ->assertHasNoErrors();
 });
 

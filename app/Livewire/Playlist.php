@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Playlist as ModelsPlaylist;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class Playlist extends Component
 {
@@ -22,7 +24,9 @@ class Playlist extends Component
 
     public ModelsPlaylist $playlist;
 
-    public function play(): void
+    public string $search = '';
+
+    public function play(bool $shuffle = false): void
     {
         $user = auth()->user();
 
@@ -31,6 +35,8 @@ class Playlist extends Component
         $songs = $this->playlist->songs()
             ->orderBy('position')
             ->pluck('song_id');
+
+        if ($shuffle) $songs = $songs->shuffle();
 
         $queue_data = $songs->map(fn(int $song_id, int $index): array => [
             'user_id' => $user->id,
@@ -66,7 +72,7 @@ class Playlist extends Component
 
         Flux::toast(
             variant: 'success',
-            text: 'Playlist added to queue',
+            text: $shuffle ? 'Shuffling playlist' : 'Playlist added to queue',
         );
     }
 
@@ -105,6 +111,9 @@ class Playlist extends Component
                 ->songs()
                 ->withPivot('position')
                 ->with('album:id,name,artwork_url')
+                ->when(Str::length($this->search) >= 1, function (Builder $query): void {
+                    $query->where('title', 'like', "%{$this->search}%");
+                })
                 ->orderBy('position')
                 ->paginate(50)
         ]);

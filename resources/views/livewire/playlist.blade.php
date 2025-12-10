@@ -1,16 +1,8 @@
 <div class="space-y-4 max-w-4xl mb-16 mx-auto">
     <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <flux:heading size="xl">
-                {{ $playlist->name }}
-            </flux:heading>
-
-            <button class="focus:outline-none cursor-pointer bg-neutral-100 flex items-center justify-center rounded-full size-7"
-                wire:click='play'
-            >
-                <flux:icon.play class="size-[15px] stroke-neutral-800! fill-neutral-800!"/>
-            </button>
-        </div>
+        <flux:heading size="xl">
+            {{ $playlist->name }}
+        </flux:heading>
 
         <div>
             <flux:modal.trigger name="{{ 'edit-playlist' . $playlist->id }}">
@@ -21,6 +13,28 @@
 
             <livewire:playlist-form :$playlist/>
         </div>
+    </div>
+
+    <div class="flex items-center justify-between gap-6">
+        <div class="flex items-center gap-4 pb-1">
+            <button class="hover:scale-110 cursor-pointer bg-neutral-800 dark:bg-neutral-100 flex items-center justify-center rounded-full size-7"
+                wire:click='play'
+            >
+                <flux:icon.play class="size-[15px] stroke-neutral-50 dark:stroke-neutral-800 fill-neutral-100 dark:fill-neutral-800" />
+            </button>
+
+            <button wire:click='play(true)' class="hover:scale-110 cursor-pointer">
+                <flux:icon.shuffle class="size-[18px] stroke-[2.5px] text-neutral-800 dark:text-neutral-100" />
+            </button>
+        </div>
+
+        <flux:input
+            icon="magnifying-glass"
+            placeholder="Search..."
+            wire:model.live.debounce.300ms='search'
+            clearable
+            class="max-w-[250px]!"
+        />
     </div>
 
     <div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-600"

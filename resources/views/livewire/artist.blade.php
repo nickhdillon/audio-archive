@@ -1,7 +1,17 @@
-<div class="space-y-4 max-w-4xl mb-16 mx-auto" x-data="{ tab: 'albums' }">
-    <flux:heading size="xl">
-        {{ $artist->name }}
-    </flux:heading>
+<div class="space-y-4 max-w-4xl mb-16 mx-auto" x-data="{ tab: $wire.entangle('tab') }">
+    <div class="flex items-center justify-between gap-6">
+        <flux:heading size="xl">
+            {{ $artist->name }}
+        </flux:heading>
+
+        <flux:input
+            icon="magnifying-glass"
+            placeholder="Search..."
+            wire:model.live.debounce.300ms='search'
+            clearable
+            class="max-w-[250px]!"
+        />
+    </div>
 
     <div>
         <flux:tab.group>
@@ -12,7 +22,7 @@
 
             <flux:tab.panel name="albums">
                 <div class="grid grid-cols-12 -mt-5 gap-6">
-                    @foreach ($artist->albums as $album)
+                    @foreach ($albums as $album)
                         <div class="col-span-6 sm:col-span-4 lg:col-span-3 space-y-1"
                             wire:key='{{ $album->id }}'
                         >
@@ -49,7 +59,7 @@
 
             <flux:tab.panel name="songs">
                 <div class="flex flex-col divide-y -mt-5 divide-neutral-200 dark:divide-neutral-600">
-                    @foreach ($artist->songs as $song)
+                    @foreach ($songs as $song)
                         <div class="flex items-center gap-4 justify-between py-3 first:pt-0 last:pb-0"
                             wire:key='{{ $song->id }}'
                         >

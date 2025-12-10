@@ -26,11 +26,34 @@ beforeEach(function () {
     );
 });
 
-test('can see albums', function () {
+it('can see albums', function () {
 	$artist = ModelsArtist::first();
 
     livewire(Artist::class, ['artist' => $artist])
-        ->assertSee(Str::headline($artist->albums()->first()->name))
+        ->assertSeeText(Str::headline($artist->albums()->first()->name))
+        ->assertHasNoErrors();
+});
+
+it('can search albums', function () {
+    $artist = ModelsArtist::first();
+
+    $album_name = $artist->albums()->first()->name;
+
+    livewire(Artist::class, ['artist' => $artist])
+        ->set('search', $album_name)
+        ->assertSeeText(Str::headline($album_name))
+        ->assertHasNoErrors();
+});
+
+it('can search songs', function () {
+    $artist = ModelsArtist::first();
+
+    $song_title = $artist->songs()->first()->title;
+
+    livewire(Artist::class, ['artist' => $artist])
+        ->set('tab', 'songs')
+        ->set('search', $song_title)
+        ->assertSeeText($song_title)
         ->assertHasNoErrors();
 });
 
