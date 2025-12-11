@@ -24,7 +24,7 @@
                 >
                     @if ($album->artwork_url)
                         <img
-                            src="{{ config('filesystems.disks.s3.url') . $album->artwork_url }}"
+                            src="{{ Storage::disk('s3')->url($album->artwork_url) }}"
                             class="object-cover inset-0 rounded-[7px] w-full"
                             loading='lazy'
                         />

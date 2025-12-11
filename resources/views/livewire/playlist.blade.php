@@ -59,14 +59,14 @@
                             'artist' => $song->display_artist,
                             'path' => Storage::disk('s3')->url($song->path),
                             'playtime' => $song->playtime,
-                            'artwork' => $song->album->artwork_url
+                            'artwork' => Storage::disk('s3')->url($song->album->artwork_url)
                         ])
                     })"
                 >
                     <div class="size-10 bg-neutral-100 dark:bg-neutral-700 rounded-sm border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
                         @if ($song->album->artwork_url)
                             <img
-                                src="{{ config('filesystems.disks.s3.url') . $song->album->artwork_url }}"
+                                src="{{ Storage::disk('s3')->url($song->album->artwork_url) }}"
                                 class="object-cover inset-0 rounded-[3px] w-full"
                                 loading='lazy'
                             />

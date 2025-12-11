@@ -7,6 +7,7 @@ namespace App\Livewire;
 use Flux\Flux;
 use Livewire\Component;
 use App\Models\SongQueue;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use App\Models\PlaylistSong;
@@ -16,7 +17,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Playlist as ModelsPlaylist;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 class Playlist extends Component
 {
@@ -50,21 +50,19 @@ class Playlist extends Component
 
         $disk = Storage::disk('s3');
 
-        $artwork_url_prefix = config('filesystems.disks.s3.url');
-
         $queue = $user->queue()
             ->with(['song', 'song.album'])
             ->orderBy('position')
             ->oldest()
             ->get()
-            ->map(function (SongQueue $item) use ($disk, $artwork_url_prefix): array {
+            ->map(function (SongQueue $item) use ($disk): array {
                 return [
                     'id' => $item->id,
                     'title' => $item->song->title,
                     'artist' => $item->song->display_artist,
                     'path' => $disk->url($item->song->path),
                     'playtime' => $item->song->playtime,
-                    'artwork' => "{$artwork_url_prefix}{$item->song->album->artwork_url}",
+                    'artwork' => $disk->url($item->song->album->artwork_url),
                 ];
             });
 

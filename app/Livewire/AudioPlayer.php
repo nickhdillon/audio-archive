@@ -21,8 +21,6 @@ class AudioPlayer extends Component
     {
         $disk = Storage::disk('s3');
 
-        $artwork_url_prefix = config('filesystems.disks.s3.url');
-
         return auth()
             ->user()
             ->queue()
@@ -33,14 +31,14 @@ class AudioPlayer extends Component
             ->orderBy('position')
             ->oldest()
             ->get()
-            ->map(function (SongQueue $item) use ($disk, $artwork_url_prefix): array {
+            ->map(function (SongQueue $item) use ($disk): array {
                 return [
                     'id' => $item->id,
                     'title' => $item->song->title,
                     'artist' => $item->song->display_artist,
                     'path' => $disk->url($item->song->path),
                     'playtime' => $item->song->playtime,
-                    'artwork' => "{$artwork_url_prefix}{$item->song->album->artwork_url}"
+                    'artwork' => $disk->url($item->song->album->artwork_url)
                 ];
             });
     }
