@@ -1,4 +1,4 @@
-<div x-data="player" x-cloak class="fixed bottom-0 left-0 lg:left-64 right-0 z-2">
+<div x-data="audioPlayer" x-cloak class="fixed bottom-0 left-0 lg:left-64 right-0 z-2">
     <div class="sm:hidden mx-6 mb-4 relative backdrop-blur-sm border border-neutral-400/30 dark:border-neutral-700/30 bg-neutral-400/70 dark:bg-neutral-700/60 flex justify-between items-center rounded-md shadow-lg p-1.5">
         <div class="flex items-center gap-2">
             <div class="size-8 shrink-0 border border-neutral-100 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
@@ -243,12 +243,12 @@
         </div>
     </div>
 
-	<audio id="audio-player" :src="currentPath" preload="metadata" class="hidden" />
+	<audio id="audio-player" crossorigin="anonymous" :src="currentPath" preload="metadata" class="hidden" />
 </div>
 
 @script
     <script>
-        Alpine.data('player', () => {
+        Alpine.data('audioPlayer', () => {
             return {
                 audio: null,
                 playing: false,

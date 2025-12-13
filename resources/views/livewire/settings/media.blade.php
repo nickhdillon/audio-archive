@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 new class extends Component {
-    public function fetchAlbumArtwork(): void
+    public function downloadAlbumArtwork(): void
     {
         $disk = Storage::disk('s3');
 
@@ -17,7 +17,7 @@ new class extends Component {
             ->whereNull('artwork_url')
             ->get();
 
-        $albums->each(function (Album $album) use ($disk) : void {
+        $albums->each(function (Album $album) use ($disk): void {
             $artwork_url = Http::get("https://itunes.apple.com/search", [
                 'term' => "{$album->slug} {$album->artist->slug}",
                 'entity' => 'album',
@@ -38,24 +38,34 @@ new class extends Component {
             }
         });
 
-        $this->dispatch('artwork-fetched');
-}
+        $this->dispatch('artwork-downloaded');
+    }
 }; ?>
 
-<section class="w-full">
+<section class="w-full mb-16">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Media')" :subheading="__('Update your media settings such as album artwork, equalizer, etc.')">
-        <form wire:submit="fetchAlbumArtwork" class="flex items-center gap-4 my-6 w-full">
-            <div class="flex items-center justify-end">
-                <flux:button variant="primary" type="submit" size="sm" class="w-full">
-                    {{ __('Fetch album artwork') }}
-                </flux:button>
+        <div class="space-y-5">
+            <div>
+                <flux:subheading>Album Artwork</flux:subheading>
+
+                <form wire:submit="downloadAlbumArtwork" class="flex mt-2 items-center gap-4 w-full">
+                    <div class="flex items-center justify-end">
+                        <flux:button variant="primary" type="submit" size="sm" class="w-full">
+                            {{ __('Download') }}
+                        </flux:button>
+                    </div>
+
+                    <x-action-message class="me-3" on="artwork-downloaded">
+                        {{ __('Downloaded.') }}
+                    </x-action-message>
+                </form>
             </div>
 
-            <x-action-message class="me-3" on="artwork-fetched">
-                {{ __('Fetched.') }}
-            </x-action-message>
-        </form>
+            <flux:separator />
+
+            <livewire:equalizer />
+        </div>
     </x-settings.layout>
 </section>

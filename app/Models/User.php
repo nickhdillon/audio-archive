@@ -26,6 +26,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'eq_preset_id',
+        'eq_values'
     ];
 
     /**
@@ -47,6 +49,7 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'eq_values' => 'array'
         ];
     }
 
@@ -80,5 +83,10 @@ class User extends Authenticatable
     public function playlists(): HasMany
     {
         return $this->hasMany(Playlist::class);
+    }
+
+    public function eqPresets(): HasMany
+    {
+        return $this->hasMany(EqPreset::class);
     }
 }
