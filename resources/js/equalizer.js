@@ -10,16 +10,6 @@ export default (gains, presets) => ({
 	init() {
 		if (!this.controller) return;
 
-		const saved = JSON.parse(localStorage.getItem('eqValues') || '[]');
-
-		saved.forEach((gain, index) => {
-			this.gains[index] = gain;
-
-			if (this.controller.filters[index]) {
-				this.controller.filters[index].gain.value = gain;
-			}
-		});
-
 		window.AudioController = this.controller;
 
 		document.addEventListener('applyPreset', (e) => {
