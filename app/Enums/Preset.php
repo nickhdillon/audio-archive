@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-use Illuminate\Support\Collection;
-
 enum Preset: string
 {
     case BASS_BOOST = 'bass_boost';
@@ -44,13 +42,4 @@ enum Preset: string
 			self::TREBLE_BOOST => 'Treble boost'
 		};
 	}
-
-	public static function options(): Collection
-    {
-        return collect(self::cases())->map(fn (self $preset): array => [
-            'value' => $preset->value,
-            'label' => $preset->label(),
-            'gains' => $preset->gains(),
-        ]);
-    }
 }

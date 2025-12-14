@@ -49,7 +49,7 @@ class Equalizer extends Component
         if ($preset) {
             $this->preset = $preset->id;
             $this->is_system_preset = $preset->is_system;
-            $this->is_user_preset = $preset->user() ? true : false;
+            $this->is_user_preset = $preset->user()->exists() ? true : false;
         } else {
             $this->preset = 'Manual';
         }
