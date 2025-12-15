@@ -110,11 +110,9 @@
 
                 <flux:modal name="queue" flyout variant="floating">
                     <div class="space-y-6 text-xs">
-                        <div x-show="!currentSong()">
-                            <p class="text-neutral-800 dark:text-neutral-100 text-sm">
-                                Queue is empty
-                            </p>
-                        </div>
+                        <flux:heading x-show="queue.length < 1" class="mb-2 text-sm">
+                            Queue is empty
+                        </flux:heading>
 
                         <div x-show="queue.length > 0 && currentPath" class="space-y-6">
                             <div class="space-y-3" x-sort="$wire.handleSort($item, $position)">
@@ -224,6 +222,7 @@
     <script>
         Alpine.data('player', () => {
             return {
+                userId: {{ auth()->id() }},
                 audio: null,
                 playing: false,
                 progress: 0,
@@ -242,16 +241,6 @@
 
                 restoreTime: true,
 
-                keys: {
-                    index: 'player-current-index',
-                    time: 'audio-player-current-time',
-                    title: 'player-current-title',
-                    artist: 'player-current-artist',
-                    path: 'player-current-path',
-                    playtime: 'player-current-playtime',
-                    muted: 'player-muted',
-                },
-
                 init() {
                     this.audio = document.getElementById('audio-player');
                     if (!this.audio) return;
@@ -259,6 +248,19 @@
                     this.restoreCurrentSong();
                     this.setupEventListeners();
                     this.restoreMuted();
+                },
+
+                get keys() {
+                    return {
+                        index: `player-current-index:${this.userId}`,
+                        time: `player-current-time:${this.userId}`,
+                        title: `player-current-title:${this.userId}`,
+                        artist: `player-current-artist:${this.userId}`,
+                        path: `player-current-path:${this.userId}`,
+                        playtime: `player-current-playtime:${this.userId}`,
+                        artwork: `player-current-artwork:${this.userId}`,
+                        muted: `player-muted:${this.userId}`,
+                    };
                 },
 
                 restoreCurrentSong() {
