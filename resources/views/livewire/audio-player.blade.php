@@ -1,4 +1,4 @@
-<div x-data="player" x-cloak class="fixed bottom-0 left-0 lg:left-64 right-0 z-2">
+<div x-data="audioPlayer" x-cloak class="fixed bottom-0 left-0 lg:left-64 right-0 z-2">
     <div class="sm:hidden mx-6 mb-4 relative backdrop-blur-sm border border-neutral-400/30 dark:border-neutral-700/30 bg-neutral-400/70 dark:bg-neutral-700/60 flex justify-between items-center rounded-md shadow-lg p-1.5">
         <div class="flex items-center gap-2">
             <div class="size-8 shrink-0 border border-neutral-100 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
@@ -36,10 +36,18 @@
         </div>
     </div>
 
-    <div class="hidden relative backdrop-blur-sm border-t border-neutral-400/30 dark:border-neutral-500/30 bg-neutral-400/70 dark:bg-neutral-700/60 sm:grid grid-cols-12 gap-4 items-center shadow-lg p-2.5">
+    <div class="hidden relative backdrop-blur-sm border-t border-neutral-400/30 dark:border-neutral-500/30 bg-neutral-500/70 dark:bg-neutral-700/60 sm:grid grid-cols-12 gap-4 items-center shadow-lg p-2.5">
         <div class="flex items-center col-span-3 gap-3">
-            <div class="size-13 shrink-0 border border-neutral-100 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
-                <flux:icon.music-2 class="text-neutral-400 size-6" />
+            <div class="size-13 shrink-0 border border-neutral-300 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
+                <img
+                    x-cloak
+                    x-show="currentArtwork"
+                    :src="currentArtwork"
+                    class="object-cover inset-0 rounded-[3px] w-full"
+                    loading='lazy'
+                />
+            
+                <flux:icon.music-2 x-cloak x-show="!currentArtwork" class="text-neutral-400 size-6" />
             </div>
 
             <div class="flex flex-col -space-y-[2px] text-[12px] truncate">
@@ -108,7 +116,7 @@
                     </flux:button>
                 </flux:modal.trigger>
 
-                <flux:modal name="queue" flyout variant="floating">
+                <flux:modal name="queue" flyout variant="floating" class="max-w-[400px]">
                     <div class="space-y-6 text-xs">
                         <flux:heading x-show="queue.length < 1" class="mb-2 text-sm">
                             Queue is empty
@@ -121,7 +129,15 @@
     
                                     <div class="flex items-center gap-2.5">
                                         <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
-                                            <flux:icon.music-2 class="text-neutral-400 size-4" />
+                                            <img
+                                                x-cloak
+                                                x-show="currentArtwork"
+                                                :src="currentArtwork"
+                                                class="object-cover inset-0 rounded-[3px] w-full"
+                                                loading='lazy'
+                                            />
+                                        
+                                            <flux:icon.music-2 x-cloak x-show="!currentArtwork" class="text-neutral-400 size-4" />
                                         </div>
                     
                                         <div class="flex flex-col flex-1 min-w-0">
@@ -131,7 +147,13 @@
                                     </div>
                                 </div>
 
-                                <flux:heading class="mb-2 text-sm">Up Next</flux:heading>
+                                <flux:heading
+                                    x-cloak
+                                    x-show="queue.length > 0 && currentIndex < queue.length - 1"
+                                    class="mb-2 text-sm"
+                                >
+                                    Up Next
+                                </flux:heading>
 
                                 @foreach ($this->queue() as $song)
                                     <div class="flex items-center gap-6"
@@ -149,7 +171,11 @@
                                             class="flex flex-1 min-w-0 text-left cursor-pointer items-center group gap-2.5"
                                         >
                                             <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
-                                                <flux:icon.music-2 class="text-neutral-400 size-4" />
+                                                @if ($song['artwork'])
+                                                    <img src="{{ $song['artwork'] }}" class="object-cover inset-0 rounded-[3px] w-full" />
+                                                @else
+                                                    <flux:icon.music-2 class="text-neutral-400 size-4" />
+                                                @endif
                                             </div>
                 
                                             <div class="flex flex-col flex-1 min-w-0">
@@ -215,12 +241,12 @@
         </div>
     </div>
 
-	<audio id="audio-player" :src="currentPath" preload="metadata" class="hidden" />
+	<audio id="audio-player" crossorigin="anonymous" :src="currentPath" preload="metadata" class="hidden" />
 </div>
 
 @script
     <script>
-        Alpine.data('player', () => {
+        Alpine.data('audioPlayer', () => {
             return {
                 userId: {{ auth()->id() }},
                 audio: null,
@@ -237,9 +263,21 @@
                 currentArtist: null,
                 currentPath: null,
                 currentPlaytime: null,
+                currentArtwork: null,
                 currentTimeDisplay: '0:00',
 
                 restoreTime: true,
+
+                keys: {
+                    index: 'player-current-index',
+                    time: 'audio-player-current-time',
+                    title: 'player-current-title',
+                    artist: 'player-current-artist',
+                    path: 'player-current-path',
+                    playtime: 'player-current-playtime',
+                    artwork: 'player-current-artwork',
+                    muted: 'player-muted',
+                },
 
                 init() {
                     this.audio = document.getElementById('audio-player');
@@ -273,6 +311,7 @@
                         this.currentArtist = localStorage.getItem(this.keys.artist);
                         this.currentPath = storedPath;
                         this.currentPlaytime = localStorage.getItem(this.keys.playtime);
+                        this.currentArtwork = localStorage.getItem(this.keys.artwork);
                         this.audio.src = storedPath;
                     }
                 },
@@ -348,6 +387,35 @@
                         }
                     });
 
+                    document.addEventListener('start-playlist', (e) => {
+                        this.queue = e.detail.queue;
+
+                        localStorage.removeItem(this.keys.index);
+                        localStorage.removeItem(this.keys.title);
+                        localStorage.removeItem(this.keys.artist);
+                        localStorage.removeItem(this.keys.path);
+                        localStorage.removeItem(this.keys.playtime);
+                        localStorage.removeItem(this.keys.artwork);
+                        localStorage.removeItem(this.keys.time);
+
+                        this.currentIndex = 0;
+                        this.currentTitle = null;
+                        this.currentArtist = null;
+                        this.currentPath = null;
+                        this.currentPlaytime = null;
+                        this.currentArtwork = null;
+                        this.progress = 0;
+                        this.currentTimeDisplay = '0:00';
+                        this.restoreTime = true;
+                        this.playing = false;
+                        this.dragging = false;
+                        this.dragProgress = null;
+
+                        if (this.queue.length > 0) {
+                            this.changeSongByIndex(0);
+                        }
+                    });
+
                     document.addEventListener('change-song', (e) => {
                         const song = e.detail?.song;
                         if (!song) return;
@@ -382,6 +450,7 @@
                     this.currentArtist = song.artist;
                     this.currentPath = song.path;
                     this.currentPlaytime = song.playtime;
+                    this.currentArtwork = song.artwork;
 
                     this.audio.src = song.path;
                     this.restoreTime = false;
@@ -407,6 +476,7 @@
                     this.currentArtist = song.artist;
                     this.currentPath = song.path;
                     this.currentPlaytime = song.playtime;
+                    this.currentArtwork = song.artwork;
 
                     this.audio.src = song.path;
                     this.restoreTime = false;
@@ -445,6 +515,7 @@
                     localStorage.setItem(this.keys.artist, this.currentArtist);
                     localStorage.setItem(this.keys.path, this.currentPath);
                     localStorage.setItem(this.keys.playtime, this.currentPlaytime);
+                    localStorage.setItem(this.keys.artwork, this.currentArtwork);
                 },
 
                 clearTime() {

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
@@ -27,6 +26,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'eq_preset_id',
+        'eq_values'
     ];
 
     /**
@@ -48,6 +49,7 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'eq_values' => 'array'
         ];
     }
 
@@ -73,20 +75,18 @@ class User extends Authenticatable
         return $this->hasManyThrough(Album::class, Artist::class);
     }
 
-    public function songs(): LengthAwarePaginator
-    {
-        return Song::query()
-            ->whereRelation('album.artist', 'user_id', $this->id)
-            ->with([
-                'album:id,title,artist_id,name',
-                'album.artist:id,name'
-            ])
-            ->orderBy('title')
-            ->paginate(20);
-    }
-
     public function queue(): HasMany
     {
         return $this->hasMany(SongQueue::class);
+    }
+
+    public function playlists(): HasMany
+    {
+        return $this->hasMany(Playlist::class);
+    }
+
+    public function eqPresets(): HasMany
+    {
+        return $this->hasMany(EqPreset::class);
     }
 }

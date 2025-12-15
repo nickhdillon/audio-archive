@@ -18,9 +18,18 @@ beforeEach(function () {
     );
 });
 
-test('can see artists', function () {
+it('can see artists', function () {
     livewire(Artists::class)
-        ->assertSee(Artist::first()->name)
+        ->assertSeeText(Artist::first()->name)
+        ->assertHasNoErrors();
+});
+
+it('can search artists', function () {
+    $artist_name = Artist::first()->name;
+
+    livewire(Artists::class)
+        ->set('search', $artist_name)
+        ->assertSeeText($artist_name)
         ->assertHasNoErrors();
 });
 

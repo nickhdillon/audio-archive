@@ -11,13 +11,12 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Renderless;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 
 class AudioPlayer extends Component
 {
-    #[Computed]
+    #[On('start-playlist'), Computed]
     public function queue(): Collection
     {
         $disk = Storage::disk('s3');
@@ -26,9 +25,8 @@ class AudioPlayer extends Component
             ->user()
             ->queue()
             ->with([
-                'song:id,title,album_id,playtime,path',
-                'song.album:id,name,artist_id',
-                'song.album.artist:id,name',
+                'song:id,title,user_id,album_id,display_artist,playtime,path',
+                'song.album:id,name,artwork_url'
             ])
             ->orderBy('position')
             ->oldest()
@@ -37,9 +35,10 @@ class AudioPlayer extends Component
                 return [
                     'id' => $item->id,
                     'title' => $item->song->title,
-                    'artist' => $item->song->album->artist->name,
+                    'artist' => $item->song->display_artist,
                     'path' => $disk->url($item->song->path),
                     'playtime' => $item->song->playtime,
+                    'artwork' => $disk->url($item->song->album->artwork_url)
                 ];
             });
     }

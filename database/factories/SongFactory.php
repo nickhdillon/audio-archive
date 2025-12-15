@@ -28,6 +28,7 @@ class SongFactory extends Factory
             'album_id' => $album->id,
             'title' => $title,
             'slug' => Str::slug($title),
+            'display_artist' => "{$artist->name} & xyz",
             'filename' => $filename,
             'playtime' => '3:30',
             'track_number' => $this->faker->numberBetween(1, 15),
