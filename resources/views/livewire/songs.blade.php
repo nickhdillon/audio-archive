@@ -62,7 +62,7 @@
                         </flux:button>
 
                         <flux:menu>
-                            <flux:menu.submenu icon="plus" heading="Add to playlist">
+                            <flux:menu.submenu icon="plus-circle" heading="Add to playlist">
                                 <flux:modal.trigger name="add-playlist">
                                     <button
                                         class="flex w-full items-center gap-2 px-2.5 py-1.5 font-medium text-sm text-start rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-600 group"
@@ -98,8 +98,6 @@
             </div>
         @endforeach
     </div>
-
-    <livewire:playlist-form />
 
     <flux:pagination :paginator="$songs" class="border-neutral-200! dark:border-neutral-600! -mt-1" />
 </div>

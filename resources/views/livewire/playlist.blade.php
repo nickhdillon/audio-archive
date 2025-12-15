@@ -138,8 +138,6 @@
         @endforelse
     </div>
 
-    <livewire:playlist-form />
-
     @if ($songs->count()) 
         <flux:pagination :paginator="$songs" class="border-neutral-200! dark:border-neutral-600! -mt-1" />
     @endif

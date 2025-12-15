@@ -201,6 +201,8 @@
 
     {{ $slot }}
 
+    <livewire:playlist-form />
+
     @persist('toast')
         <flux:toast.group position="top end">
             <flux:toast />

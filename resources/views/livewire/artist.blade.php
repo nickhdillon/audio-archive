@@ -109,7 +109,7 @@
                                     </flux:button>
             
                                     <flux:menu>
-                                        <flux:menu.submenu icon="plus" heading="Add to playlist">
+                                        <flux:menu.submenu icon="plus-circle" heading="Add to playlist">
                                             <flux:menu.radio.group class="flex flex-col">
                                                 <flux:modal.trigger name="add-playlist">
                                                     <button
@@ -148,6 +148,4 @@
             </flux:tab.panel>
         </flux:tab.group>
     </div>
-
-    <livewire:playlist-form />
 </div>

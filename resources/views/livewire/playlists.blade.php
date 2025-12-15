@@ -4,15 +4,11 @@
             Playlists
         </flux:heading>
 
-        <div>
-            <flux:modal.trigger name="add-playlist">
-                <flux:button icon="plus" variant="primary" size="sm">
-                    Add
-                </flux:button>
-            </flux:modal.trigger>
-
-            <livewire:playlist-form />
-        </div>
+        <flux:modal.trigger name="add-playlist">
+            <flux:button icon="plus" variant="primary" size="sm">
+                Add
+            </flux:button>
+        </flux:modal.trigger>
     </div>
 
     <div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-600">
