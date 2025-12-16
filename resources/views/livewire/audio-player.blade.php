@@ -204,7 +204,7 @@
                                 </flux:button>
                             </flux:modal.trigger>
         
-                            <flux:modal name="queue" flyout variant="floating" class="min-w-[300px]! max-w-[315px] sm:max-w-[400px]">
+                            <flux:modal name="queue" flyout position="bottom" class="h-[85%] w-full rounded-t-xl">
                                 <div class="space-y-6 text-xs">
                                     <flux:heading x-show="queue.length < 1" class="mb-2 text-sm">
                                         Queue is empty
