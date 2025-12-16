@@ -42,6 +42,7 @@ class AudioPlayer extends Component
                     'artist' => $item->song->display_artist,
                     'path' => $disk->url($item->song->path),
                     'playtime' => $item->song->playtime,
+                    'album' => $item->song->album->name,
                     'artwork' => $disk->url($item->song->album->artwork_url)
                 ];
             });
