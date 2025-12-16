@@ -108,32 +108,32 @@
             <div class="flex-1 flex items-start justify-center px-6 pt-4">
                 <div class="w-full space-y-6 max-w-sm mx-auto">
                     <div
-                        class="relative w-full aspect-square rounded-lg border border-neutral-300 dark:border-neutral-700 shadow-md shadow-black/10 dark:shadow-black/20 bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center"
+                        class="relative w-full aspect-square rounded-[12px] border border-neutral-300 dark:border-neutral-700 shadow-md shadow-black/10 dark:shadow-black/20 bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center"
                     >
                         <div
                             x-show="currentArtwork"
                             :style="`background-image: url(${currentArtwork});`"
-                            class="absolute inset-0 rounded-lg bg-cover bg-center filter blur-3xl scale-105 opacity-70 dark:opacity-40"
+                            class="absolute inset-0 rounded-[8px] bg-cover bg-center filter blur-3xl scale-105 opacity-70 dark:opacity-40"
                         ></div>
 
                         <img
                             x-cloak
                             x-show="currentArtwork"
                             :src="currentArtwork"
-                            class="absolute inset-0 w-full h-full object-cover rounded-lg"
+                            class="absolute inset-0 w-full h-full object-cover rounded-[10px]"
                             loading="lazy"
                         />
                 
                         <flux:icon.music-2
                             x-cloak
                             x-show="!currentArtwork"
-                            class="text-neutral-400 size-56"
+                            class="text-neutral-400 size-28"
                         />
                     </div>
 
                     <div class="flex flex-col text-center">
                         <p x-text="currentTitle" class="truncate"></p>
-                        <p x-text="currentArtist" class="text-sm truncate dark:text-neutral-400"></p>
+                        <p x-text="currentArtist" class="text-sm truncate text-neutral-600 dark:text-neutral-400"></p>
                     </div>
 
                     <div class="flex flex-col -space-y-1 text-neutral-800 dark:text-neutral-100 w-full text-[11px] items-center">    
@@ -160,8 +160,20 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-center items-center gap-8">
-                        {{-- <flux:icon.shuffle class="cursor-pointer size-6 text-neutral-800 dark:text-neutral-100" /> --}}
+                    <div class="flex justify-center items-center gap-10">
+                        <div class="relative flex items-center justify-center">
+                            <flux:icon.shuffle
+                                x-on:click="$wire.shuffle(queue[currentIndex].song_id)"
+                                @class([
+                                    'text-green-400!' => auth()->user()->shuffle,
+                                    'cursor-pointer size-6 text-neutral-800 dark:text-neutral-100'
+                                ])
+                            />
+
+                            @if (auth()->user()->shuffle) 
+                                <div class="absolute -bottom-1.5 mr-0.5 h-1 w-1 rounded-full bg-green-400"></div>
+                            @endif
+                        </div>
         
                         <flux:icon.skip-back x-on:click="playPrevious()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-6" />
         
@@ -179,7 +191,7 @@
         
                         <flux:icon.skip-forward x-on:click="playNext()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-6" />
         
-                        {{-- <flux:icon.repeat class="cursor-pointer size-6 text-neutral-800 dark:text-neutral-100" /> --}}
+                        <flux:icon.repeat class="cursor-pointer size-6 text-neutral-800 dark:text-neutral-100" />
                     </div>
 
                     <div class="flex -mx-2.5 justify-between items-center">
@@ -397,7 +409,19 @@
 
             <div class="flex col-span-6 items-center flex-col space-y-1.5">
                 <div class="flex items-center gap-6 pr-2">
-                    {{-- <flux:icon.shuffle class="cursor-pointer size-4 text-neutral-800 dark:text-neutral-100" /> --}}
+                    <div class="relative flex items-center justify-center">
+                        <flux:icon.shuffle
+                            x-on:click="$wire.shuffle(queue[currentIndex].song_id)"
+                            @class([
+                                'text-green-400!' => auth()->user()->shuffle,
+                                'cursor-pointer size-4 text-neutral-800 dark:text-neutral-100'
+                            ])
+                        />
+
+                        @if (auth()->user()->shuffle) 
+                            <div class="absolute -bottom-1 size-[2.5px] mr-0.5 rounded-full bg-green-400"></div>
+                        @endif
+                    </div>
 
                     <flux:icon.skip-back x-on:click="playPrevious()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-4" />
 
@@ -415,7 +439,7 @@
 
                     <flux:icon.skip-forward x-on:click="playNext()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-4" />
 
-                    {{-- <flux:icon.repeat class="cursor-pointer size-4 text-neutral-800 dark:text-neutral-100" /> --}}
+                    <flux:icon.repeat class="cursor-pointer size-4 text-neutral-800 dark:text-neutral-100" />
                 </div>
 
                 <div class="flex text-neutral-800 dark:text-neutral-100 w-full text-[11px] items-center gap-[10px]">
@@ -669,7 +693,7 @@
         Alpine.data('audioPlayer', () => {
             return {
                 userId: {{ auth()->id() }},
-                expanded: false,
+                expanded: true,
                 audio: null,
                 playing: false,
                 progress: 0,

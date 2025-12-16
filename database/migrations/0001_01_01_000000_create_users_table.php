@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->boolean('shuffle')->default(false);
+            $table->string('repeat')->default('off');
             $table->foreignIdFor(EqPreset::class)->nullable()->constrained()->nullOnDelete();
             $table->json('eq_values')->nullable();
             $table->rememberToken();

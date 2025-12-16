@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use App\Enums\Repeat;
 
 class User extends Authenticatable
 {
@@ -26,6 +27,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'shuffle',
+        'repeat',
         'eq_preset_id',
         'eq_values'
     ];
@@ -49,6 +52,8 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'shuffle' => 'boolean',
+            'repeat' => Repeat::class,
             'eq_values' => 'array'
         ];
     }

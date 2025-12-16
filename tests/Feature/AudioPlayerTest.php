@@ -72,6 +72,52 @@ it('can remove a song from the queue', function () {
         ->assertHasNoErrors();
 });
 
+it('can shuffle the queue', function () {
+    $song_1 = Song::first();
+    $song_2 = Song::find(2);
+    $song_3 = Song::find(3);
+
+    $component = livewire(AudioPlayer::class)
+        ->call('addToQueue', $song_1->id)
+        ->call('addToQueue', $song_2->id)
+        ->call('addToQueue', $song_3->id)
+        ->assertCount('queue', 3)
+        ->assertHasNoErrors();
+
+    expect(SongQueue::find($song_1->id)->position)->toBe(1);
+    expect(SongQueue::find($song_2->id)->position)->toBe(2);
+    expect(SongQueue::find($song_3->id)->position)->toBe(3);
+
+    $component->call('shuffle', $song_1->id);
+
+    expect(SongQueue::find($song_1->id)->position)->toBe(1);
+});
+
+it('did not shuffle the queue when shuffle is off', function () {
+    auth()->user()->update(['shuffle' => true]);
+    
+    $song_1 = Song::first();
+    $song_2 = Song::find(2);
+    $song_3 = Song::find(3);
+
+    $component = livewire(AudioPlayer::class)
+        ->call('addToQueue', $song_1->id)
+        ->call('addToQueue', $song_2->id)
+        ->call('addToQueue', $song_3->id)
+        ->assertCount('queue', 3)
+        ->assertHasNoErrors();
+
+    expect(SongQueue::find($song_1->id)->position)->toBe(1);
+    expect(SongQueue::find($song_2->id)->position)->toBe(2);
+    expect(SongQueue::find($song_3->id)->position)->toBe(3);
+
+    $component->call('shuffle', $song_1->id);
+
+    expect(SongQueue::find($song_1->id)->position)->toBe(1);
+    expect(SongQueue::find($song_2->id)->position)->toBe(2);
+    expect(SongQueue::find($song_3->id)->position)->toBe(3);
+});
+
 test('component can render', function () {
     livewire(AudioPlayer::class)
         ->assertHasNoErrors();

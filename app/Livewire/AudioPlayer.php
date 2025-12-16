@@ -8,6 +8,7 @@ use Flux\Flux;
 use Livewire\Component;
 use App\Models\SongQueue;
 use Livewire\Attributes\On;
+use App\Traits\ManagesQueue;
 use App\Traits\ManagesPlaylists;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Collection;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
 
 class AudioPlayer extends Component
 {
-    use ManagesPlaylists;
+    use ManagesQueue, ManagesPlaylists;
 
     #[On('start-playlist'), Computed]
     public function queue(): Collection
