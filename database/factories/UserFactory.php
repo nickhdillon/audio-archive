@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Enums\Repeat;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -27,6 +28,8 @@ class UserFactory extends Factory
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => 'password',
+            'shuffle' => false,
+            'repeat' => Repeat::OFF,
             'remember_token' => Str::random(10),
         ];
     }

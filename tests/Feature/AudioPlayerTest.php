@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\User;
 use App\Models\Song;
+use App\Enums\Repeat;
 use App\Models\Album;
 use App\Models\Artist;
 use App\Models\SongQueue;
@@ -116,6 +117,57 @@ it('did not shuffle the queue when shuffle is off', function () {
     expect(SongQueue::find($song_1->id)->position)->toBe(1);
     expect(SongQueue::find($song_2->id)->position)->toBe(2);
     expect(SongQueue::find($song_3->id)->position)->toBe(3);
+});
+
+it('can repeat the queue', function () {
+    $song_1 = Song::first();
+    $song_2 = Song::find(2);
+    $song_3 = Song::find(3);
+
+    livewire(AudioPlayer::class)
+        ->call('addToQueue', $song_1->id)
+        ->call('addToQueue', $song_2->id)
+        ->call('addToQueue', $song_3->id)
+        ->assertCount('queue', 3)
+        ->call('repeat')
+        ->assertHasNoErrors();
+
+    expect(auth()->user()->repeat)->toBe(Repeat::ALL);
+});
+
+it('can repeat one song in the queue', function () {
+    $song_1 = Song::first();
+    $song_2 = Song::find(2);
+    $song_3 = Song::find(3);
+
+    livewire(AudioPlayer::class)
+        ->call('addToQueue', $song_1->id)
+        ->call('addToQueue', $song_2->id)
+        ->call('addToQueue', $song_3->id)
+        ->assertCount('queue', 3)
+        ->call('repeat')
+        ->call('repeat')
+        ->assertHasNoErrors();
+
+    expect(auth()->user()->repeat)->toBe(Repeat::ONE);
+});
+
+it('can turn repeat off', function () {
+    $song_1 = Song::first();
+    $song_2 = Song::find(2);
+    $song_3 = Song::find(3);
+
+    livewire(AudioPlayer::class)
+        ->call('addToQueue', $song_1->id)
+        ->call('addToQueue', $song_2->id)
+        ->call('addToQueue', $song_3->id)
+        ->assertCount('queue', 3)
+        ->call('repeat')
+        ->call('repeat')
+        ->call('repeat')
+        ->assertHasNoErrors();
+
+    expect(auth()->user()->repeat)->toBe(Repeat::OFF);
 });
 
 test('component can render', function () {

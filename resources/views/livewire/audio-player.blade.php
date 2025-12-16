@@ -1,3 +1,5 @@
+@use('App\Enums\Repeat', 'Repeat')
+
 <div x-data="audioPlayer" x-cloak class="fixed bottom-0 left-0 lg:left-64 right-0 z-2">
     <template x-if="isMobile">
         <div class="mx-6 mb-4 relative backdrop-blur-sm border border-neutral-200/70 dark:border-neutral-500/30 bg-neutral-200/70 dark:bg-neutral-700/60 flex justify-between items-center rounded-md shadow-lg p-1.5"
@@ -113,7 +115,7 @@
                         <div
                             x-show="currentArtwork"
                             :style="`background-image: url(${currentArtwork});`"
-                            class="absolute inset-0 rounded-[8px] bg-cover bg-center filter blur-3xl scale-105 opacity-70 dark:opacity-40"
+                            class="absolute inset-0 rounded-[8px] bg-cover bg-center filter blur-3xl scale-105 opacity-30 dark:opacity-40"
                         ></div>
 
                         <img
@@ -191,7 +193,26 @@
         
                         <flux:icon.skip-forward x-on:click="playNext()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-6" />
         
-                        <flux:icon.repeat class="cursor-pointer size-6 text-neutral-800 dark:text-neutral-100" />
+                        <div class="relative flex items-center justify-center">
+                            @if (auth()->user()->repeat !== Repeat::ONE) 
+                                <flux:icon.repeat
+                                    wire:click='repeat'
+                                    @class([
+                                        'text-green-400!' => auth()->user()->repeat === Repeat::ALL,
+                                        'cursor-pointer size-6 text-neutral-800 dark:text-neutral-100'
+                                    ])
+                                />
+                            @else
+                                <flux:icon.repeat-1
+                                    wire:click='repeat'
+                                    class="cursor-pointer size-6 text-green-400"
+                                />
+                            @endif
+
+                            @if (auth()->user()->repeat !== Repeat::OFF) 
+                                <div class="absolute -bottom-1.5 h-1 w-1 rounded-full bg-green-400"></div>
+                            @endif
+                        </div>
                     </div>
 
                     <div class="flex -mx-2.5 justify-between items-center">
@@ -439,7 +460,26 @@
 
                     <flux:icon.skip-forward x-on:click="playNext()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-4" />
 
-                    <flux:icon.repeat class="cursor-pointer size-4 text-neutral-800 dark:text-neutral-100" />
+                    <div class="relative flex items-center justify-center">
+                        @if (auth()->user()->repeat !== Repeat::ONE) 
+                            <flux:icon.repeat
+                                wire:click='repeat'
+                                @class([
+                                    'text-green-400!' => auth()->user()->repeat === Repeat::ALL,
+                                    'cursor-pointer size-4 text-neutral-800 dark:text-neutral-100'
+                                ])
+                            />
+                        @else
+                            <flux:icon.repeat-1
+                                wire:click='repeat'
+                                class="cursor-pointer size-4 text-green-400"
+                            />
+                        @endif
+
+                        @if (auth()->user()->repeat !== Repeat::OFF) 
+                            <div class="absolute -bottom-1 size-[2.5px] rounded-full bg-green-400"></div>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="flex text-neutral-800 dark:text-neutral-100 w-full text-[11px] items-center gap-[10px]">
@@ -701,6 +741,7 @@
                 dragging: false,
                 dragProgress: null,
                 isMobile: window.innerWidth < 640,
+                repeat: @js(auth()->user()->repeat),
 
                 queue: @js($this->queue),
 
@@ -866,6 +907,10 @@
                         this.changeSongByIndex(this.queue.length - 1);
                     });
 
+                    document.addEventListener('repeat-changed', (e) => {
+                        this.repeat = e.detail.value;
+                    });
+
                     window.addEventListener('resize', () => this.isMobile = window.innerWidth < 640);
                 },
 
@@ -933,7 +978,23 @@
                 },
 
                 playNext() {
-                    if (this.currentIndex + 1 >= this.queue.length) return;
+                    if (this.repeat === '{{ Repeat::ONE }}') {
+                        this.audio.currentTime = 0;
+                        this.audio.play();
+                        this.playing = true;
+                        this.progress = 0;
+
+                        return;
+                    }
+
+                    if (this.currentIndex + 1 >= this.queue.length) {
+                        if (this.repeat === '{{ Repeat::ALL }}') {
+                            this.progress = 0;
+                            this.changeSongByIndex(0);
+                        }
+
+                        return;
+                    }
 
                     this.progress = 0;
                     this.changeSongByIndex(this.currentIndex + 1);

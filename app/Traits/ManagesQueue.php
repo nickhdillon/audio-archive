@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
+use App\Enums\Repeat;
 use App\Models\SongQueue;
 
 trait ManagesQueue
@@ -38,5 +39,20 @@ trait ManagesQueue
 		});
 
 		$user->update(['shuffle' => true]);
+	}
+
+	public function repeat(): void
+	{
+		$user = auth()->user();
+
+		$next = match ($user->repeat) {
+			Repeat::OFF => Repeat::ALL,
+			Repeat::ALL => Repeat::ONE,
+			Repeat::ONE => Repeat::OFF
+		};
+
+		$user->update(['repeat' => $next]);
+
+		$this->dispatch('repeat-changed', value: $next);
 	}
 }
