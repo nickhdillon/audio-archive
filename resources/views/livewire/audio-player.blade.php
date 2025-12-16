@@ -1,9 +1,4 @@
-<div
-    x-data="audioPlayer"
-    x-cloak
-    class="fixed bottom-0 left-0 lg:left-64 right-0 z-2"
-    x-init="$watch('expanded', value => document.body.classList.toggle('overflow-hidden', value))"
->
+<div x-data="audioPlayer" x-cloak class="fixed bottom-0 left-0 lg:left-64 right-0 z-2">
     <template x-if="isMobile">
         <div class="mx-6 mb-4 relative backdrop-blur-sm border border-neutral-200/70 dark:border-neutral-500/30 bg-neutral-200/70 dark:bg-neutral-700/60 flex justify-between items-center rounded-md shadow-lg p-1.5"
             x-on:click="expanded = true"
@@ -57,6 +52,7 @@
     <template x-teleport="body">
         <div
             x-show="expanded"
+            x-trap.inert.noscroll="expanded"
             x-transition:enter="transition transform duration-300 ease-out"
             x-transition:enter-start="translate-y-full"
             x-transition:enter-end="translate-y-0"
