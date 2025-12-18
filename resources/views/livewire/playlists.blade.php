@@ -1,11 +1,19 @@
-<div class="space-y-4 max-w-4xl mb-16 mx-auto">
-    <div class="flex items-center justify-between">
-        <flux:heading size="xl">
-            Playlists
-        </flux:heading>
+<div class="space-y-4 mb-16">
+    <div class="flex sm:justify-between gap-2">
+        <flux:input
+            icon="magnifying-glass"
+            placeholder="Search..."
+            wire:model.live.debounce.300ms='search'
+            clearable
+            class="sm:max-w-[300px]!"
+        />
 
-        <flux:modal.trigger name="add-playlist">
-            <flux:button icon="plus" variant="primary" size="sm">
+        <flux:modal.trigger name="add-playlist" class="sm:hidden">
+            <flux:button icon="plus" variant="primary" class="rounded-full! h-9.5! w-11" />
+        </flux:modal.trigger>
+        
+        <flux:modal.trigger name="add-playlist" class="hidden sm:block">
+            <flux:button icon="plus" variant="primary" class="h-9.5!">
                 Add
             </flux:button>
         </flux:modal.trigger>

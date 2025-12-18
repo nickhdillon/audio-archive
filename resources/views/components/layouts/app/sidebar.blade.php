@@ -140,13 +140,20 @@
 
         <flux:spacer />
 
-        <flux:dropdown position="top" align="end">
+        <flux:dropdown position="top" align="end" class="-mr-1">
             @if (auth()->user()->avatar)
-                <flux:profile :initials="auth()->user()->initials()"
+                <flux:profile
+                    circle
+                    :chevron="false"
+                    :initials="auth()->user()->initials()"
                     :avatar="Storage::disk('s3')->url('users/' . auth()->id() . '/avatars/' . auth()->user()->avatar)"
-                    icon-trailing="chevrons-up-down" />
+                />
             @else
-                <flux:profile :initials="auth()->user()->initials()" icon-trailing="chevrons-up-down" />
+                <flux:profile
+                    circle
+                    :chevron="false"
+                    :initials="auth()->user()->initials()"
+                />
             @endif
 
             <flux:menu>

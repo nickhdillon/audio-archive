@@ -1,4 +1,4 @@
-<div class="space-y-4 max-w-4xl mb-16 mx-auto">
+<div class="space-y-4 max-w-4xl mb-16">
     <div class="flex items-center justify-between">
         <flux:heading size="xl">
             {{ $playlist->name }}

@@ -1,4 +1,4 @@
-<div class="space-y-4 max-w-4xl mb-16 mx-auto" x-data="{ tab: $wire.entangle('tab') }">
+<div class="space-y-4 mb-16" x-data="{ tab: $wire.entangle('tab') }">
     <div class="flex flex-wrap items-center justify-between gap-3">
         <flux:heading size="xl">
             {{ $artist->name }}
@@ -9,7 +9,7 @@
             placeholder="Search..."
             wire:model.live.debounce.300ms='search'
             clearable
-            class="max-w-[250px]!"
+            class="sm:max-w-[300px]!"
         />
     </div>
 

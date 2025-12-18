@@ -1,17 +1,11 @@
-<div class="space-y-4 max-w-4xl mb-16 mx-auto">
-    <div class="flex items-center justify-between gap-6">
-        <flux:heading size="xl">
-            Songs
-        </flux:heading>
-
-        <flux:input
-            icon="magnifying-glass"
-            placeholder="Search..."
-            wire:model.live.debounce.300ms='search'
-            clearable
-            class="max-w-[250px]!"
-        />
-    </div>
+<div class="space-y-4 mb-16">
+    <flux:input
+        icon="magnifying-glass"
+        placeholder="Search..."
+        wire:model.live.debounce.300ms='search'
+        clearable
+        class="sm:max-w-[300px]!"
+    />
 
     <div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-600">
         @foreach ($songs as $song)

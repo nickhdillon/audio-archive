@@ -24,6 +24,15 @@ test('can see playlists', function () {
         ->assertHasNoErrors();
 });
 
+it('can search artists', function () {
+    $playlist_name = Playlist::first()->name;
+
+    livewire(Playlists::class)
+        ->set('search', $playlist_name)
+        ->assertSeeText($playlist_name)
+        ->assertHasNoErrors();
+});
+
 test('component can render', function () {
     livewire(Playlists::class)
         ->assertHasNoErrors();

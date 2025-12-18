@@ -1,4 +1,4 @@
-<div class="space-y-4 max-w-4xl mb-16 mx-auto">
+<div class="space-y-4 mb-16">
     <flux:heading size="xl">
         {{ $album->name }}
     </flux:heading>
