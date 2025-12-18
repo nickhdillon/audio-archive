@@ -6,6 +6,7 @@
             </flux:navlist.item>
             <flux:navlist.item :href="route('appearance.edit')" wire:navigate>{{ __('Appearance') }}</flux:navlist.item>
             <flux:navlist.item :href="route('media.edit')" wire:navigate>{{ __('Media') }}</flux:navlist.item>
+            <flux:navlist.item :href="route('upload')" wire:navigate>{{ __('Upload') }}</flux:navlist.item>
         </flux:navlist>
     </div>
 

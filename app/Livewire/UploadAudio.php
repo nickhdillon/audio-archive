@@ -134,6 +134,6 @@ class UploadAudio extends Component
 
     public function render(): View
     {
-        return view('livewire.upload-audio');
+        return view('livewire.settings.upload-audio');
     }
 }
