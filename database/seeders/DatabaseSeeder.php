@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create();
+        if (! app()->isProduction()) User::factory()->create();
 
         $this->call(EqPresetSeeder::class);
     }
