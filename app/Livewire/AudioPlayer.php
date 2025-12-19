@@ -29,7 +29,7 @@ class AudioPlayer extends Component
             ->user()
             ->queue()
             ->with([
-                'song:id,title,user_id,album_id,display_artist,playtime,path',
+                'song:id,title,album_id,display_artist,playtime,path',
                 'song.album:id,name,artwork_url'
             ])
             ->orderBy('position')
