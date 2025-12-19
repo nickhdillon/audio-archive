@@ -402,7 +402,7 @@
         </div>
     </template>
 
-    <template x-if="!isMobile">
+    <template x-if="!isMobile && currentSong">
         <div class="max-w-6xl w-full mx-auto justify-center">
             <div class="relative rounded-md mb-4 mx-4 backdrop-blur-sm border border-neutral-200/70 dark:border-neutral-500/30 bg-neutral-200/70 dark:bg-neutral-700/60 grid grid-cols-12 gap-4 items-center shadow-lg p-2.5">
                 <div class="flex items-center col-span-3 gap-3">
