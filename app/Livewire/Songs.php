@@ -23,7 +23,7 @@ class Songs extends Component
         return view('livewire.songs', [
             'songs' => Song::query()
                 ->with([
-                    'album:id,title,artist_id,name,artwork_url',
+                    'album:id,artist_id,name,artwork_url',
                     'album.artist:id,name'
                 ])
                 ->whereRelation('album.artist', 'user_id', auth()->id())
