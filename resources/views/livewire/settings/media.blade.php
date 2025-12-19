@@ -13,7 +13,7 @@ new class extends Component {
 
         $albums = auth()->user()
             ->albums()
-            ->with('artist:id,slug,artwork_url')
+            ->with('artist:id,slug')
             ->whereNull('artwork_url')
             ->get();
 
