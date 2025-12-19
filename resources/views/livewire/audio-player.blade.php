@@ -1037,11 +1037,21 @@
                 },
 
                 toggleMute() {
+                    if (!this.audio) return;
+
                     this.muted = !this.muted;
-                    this.audio.muted = this.muted;
+
+                    if (this.audio.readyState >= 2) {
+                        this.audio.muted = this.muted;
+                    } else {
+                        this.audio.addEventListener('loadedmetadata', () => {
+                            this.audio.muted = this.muted;
+                        }, { once: true });
+                    }
+
                     localStorage.setItem(this.keys.muted, this.muted);
                 },
-
+                
                 seek(event) {
                     if (!this.audio?.duration) return;
 
