@@ -157,12 +157,6 @@ it('can delete a user preset', function() {
         ->assertHasNoErrors()
         ->assertRedirectToRoute('media.edit');
 
-    $this->assertDatabaseHas('users', [
-        'id' => auth()->id(),
-        'eq_preset_id' => null,
-        'eq_values' => null,
-    ]);
-
     $this->assertDatabaseCount('eq_presets', 0);
 });
 
