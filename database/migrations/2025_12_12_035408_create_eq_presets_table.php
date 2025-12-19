@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('eq_presets', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->nullable();
+            $table->foreignIdFor(User::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->json('gains');
             $table->boolean('is_system')->default(false);

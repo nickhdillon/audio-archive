@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('shuffle')->default(false);
             $table->string('repeat')->default('off');
-            $table->foreignIdFor(EqPreset::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(EqPreset::class)->nullable();
             $table->json('eq_values')->nullable();
             $table->rememberToken();
             $table->timestamps();
