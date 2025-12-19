@@ -231,13 +231,13 @@
                         </div>
 
                         <div>
-                            <flux:modal.trigger name="queue">
+                            <flux:modal.trigger name="queue-mobile">
                                 <flux:button variant="ghost" size="sm" class="hover:bg-transparent! cursor-pointer">
                                     <flux:icon.queue-list class="size-[20px] text-neutral-800 dark:text-neutral-100" />
                                 </flux:button>
                             </flux:modal.trigger>
         
-                            <flux:modal name="queue" flyout position="bottom" class="h-[85%] w-full rounded-t-xl">
+                            <flux:modal name="queue-mobile" flyout position="bottom" class="h-[85%] w-full rounded-t-2xl">
                                 <div class="space-y-6 text-xs">
                                     <flux:heading x-show="queue.length < 1" class="mb-2 text-sm">
                                         Queue is empty
@@ -403,7 +403,7 @@
     </template>
 
     <template x-if="!isMobile">
-        <div class="flex w-full max-w-6xl mx-auto justify-center">
+        <div class="max-w-6xl w-full mx-auto justify-center">
             <div class="relative rounded-md mb-4 mx-4 backdrop-blur-sm border border-neutral-200/70 dark:border-neutral-500/30 bg-neutral-200/70 dark:bg-neutral-700/60 grid grid-cols-12 gap-4 items-center shadow-lg p-2.5">
                 <div class="flex items-center col-span-3 gap-3">
                     <div class="size-13 shrink-0 border border-neutral-300 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
@@ -509,13 +509,13 @@
 
                 <div class="col-span-3 items-center -space-x-2 flex ml-auto">
                     <div>
-                        <flux:modal.trigger name="queue">
+                        <flux:modal.trigger name="queue-desktop">
                             <flux:button variant="ghost" size="sm" class="hover:bg-transparent! cursor-pointer">
                                 <flux:icon.queue-list class="size-[18px] text-neutral-800 dark:text-neutral-100" />
                             </flux:button>
                         </flux:modal.trigger>
 
-                        <flux:modal name="queue" flyout variant="floating" class="max-w-[400px]">
+                        <flux:modal name="queue-desktop" flyout variant="floating" class="max-w-[400px]">
                             <div class="space-y-6 text-xs">
                                 <flux:heading x-show="queue.length < 1" class="mb-2 text-sm">
                                     Queue is empty
