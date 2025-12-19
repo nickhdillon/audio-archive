@@ -1,7 +1,7 @@
 @use('App\Enums\Repeat', 'Repeat')
 
 <div x-data="audioPlayer" x-cloak class="fixed bottom-0 left-0 right-0 z-2">
-    <template x-if="isMobile && currentSong">
+    <template x-if="isMobile && currentSong()">
         <div class="mx-6 mb-4 relative backdrop-blur-sm border border-neutral-200/70 dark:border-neutral-500/30 bg-neutral-200/70 dark:bg-neutral-700/60 flex justify-between items-center rounded-md shadow-lg p-1.5"
             x-on:click="expanded = true"
         >
@@ -402,7 +402,7 @@
         </div>
     </template>
 
-    <template x-if="!isMobile && currentSong">
+    <template x-if="!isMobile && currentSong()">
         <div class="max-w-6xl w-full mx-auto justify-center">
             <div class="relative rounded-md mb-4 mx-4 backdrop-blur-sm border border-neutral-200/70 dark:border-neutral-500/30 bg-neutral-200/70 dark:bg-neutral-700/60 grid grid-cols-12 gap-4 items-center shadow-lg p-2.5">
                 <div class="flex items-center col-span-3 gap-3">
