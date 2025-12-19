@@ -42,7 +42,7 @@ new class extends Component {
     }
 }; ?>
 
-<section class="w-full mb-16">
+<section class="w-full mb-22">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Media')" :subheading="__('Update your media settings such as album artwork, equalizer, etc.')">

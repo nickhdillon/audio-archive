@@ -1,4 +1,4 @@
-<section class="w-full mb-16">
+<section class="w-full mb-22">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Upload Audio')">

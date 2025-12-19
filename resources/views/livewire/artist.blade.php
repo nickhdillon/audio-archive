@@ -1,4 +1,4 @@
-<div class="space-y-4 mb-16" x-data="{ tab: $wire.entangle('tab') }">
+<div class="space-y-4 mb-22" x-data="{ tab: $wire.entangle('tab') }">
     <div class="flex flex-wrap items-center justify-between gap-3">
         <flux:heading size="xl">
             {{ $artist->name }}

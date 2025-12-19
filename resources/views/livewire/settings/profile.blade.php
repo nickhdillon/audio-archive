@@ -40,7 +40,7 @@ new class extends Component {
     }
 }; ?>
 
-<section class="w-full mb-16">
+<section class="w-full mb-22">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Profile')" :subheading="__('Update your avatar, name, and email address')">

@@ -1,4 +1,4 @@
-<div class="space-y-4 mb-16">
+<div class="space-y-4 mb-22">
     <div class="flex sm:justify-between gap-2">
         <flux:input
             icon="magnifying-glass"

@@ -1,4 +1,4 @@
-<div class="space-y-4 mb-16">
+<div class="space-y-4 mb-22">
     <flux:input
         icon="magnifying-glass"
         placeholder="Search..."
