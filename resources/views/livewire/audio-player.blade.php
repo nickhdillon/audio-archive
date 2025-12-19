@@ -245,7 +245,7 @@
         
                                     <div x-show="queue.length > 0 && currentPath" class="space-y-6">
                                         <div class="space-y-3" x-sort="$wire.handleSort($item, $position)">
-                                            <div x-show="currentSong()">
+                                            <div x-show="currentPath">
                                                 <flux:heading class="mb-2 text-sm">Now Playing</flux:heading>
         
                                                 <div class="flex items-center justify-between gap-6">
@@ -263,9 +263,9 @@
                                                         </div>
         
                                                         <div class="flex flex-col flex-1 min-w-0">
-                                                            <p class="font-medium text-accent truncate" x-text="currentSong()?.title"></p>
+                                                            <p class="font-medium text-accent truncate" x-text="currentTitle"></p>
         
-                                                            <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="currentSong()?.artist"></p>
+                                                            <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="currentArtist"></p>
                                                         </div>
                                                     </div>
         
@@ -523,7 +523,7 @@
 
                                 <div x-show="queue.length > 0 && currentPath" class="space-y-6">
                                     <div class="space-y-3" x-sort="$wire.handleSort($item, $position)">
-                                        <div x-show="currentSong()">
+                                        <div x-show="currentPath">
                                             <flux:heading class="mb-2 text-sm">Now Playing</flux:heading>
 
                                             <div class="flex items-center justify-between gap-6">
@@ -541,9 +541,9 @@
                                                     </div>
 
                                                     <div class="flex flex-col flex-1 min-w-0">
-                                                        <p class="font-medium text-accent truncate" x-text="currentSong()?.title"></p>
+                                                        <p class="font-medium text-accent truncate" x-text="currentTitle"></p>
 
-                                                        <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="currentSong()?.artist"></p>
+                                                        <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="currentArtist"></p>
                                                     </div>
                                                 </div>
 
@@ -916,13 +916,31 @@
                     window.addEventListener('resize', () => this.isMobile = window.innerWidth < 640);
                 },
 
+                play({ src = null, resetTime = false } = {}) {
+                    if (!this.audio) return;
+
+                    if (src && this.audio.src !== src) {
+                        this.audio.src = src;
+                    }
+
+                    if (resetTime) {
+                        this.audio.currentTime = 0;
+                    }
+
+                    this.audio.play().catch(() => {});
+                    this.playing = true;
+                },
+
                 toggle() {
                     if (!this.audio) return;
 
-                    if (this.playing) this.audio.pause();
-                    else this.audio.play();
-
-                    this.playing = !this.playing;
+                    if (this.audio.paused) {
+                        this.audio.play();
+                        this.playing = true;
+                    } else {
+                        this.audio.pause();
+                        this.playing = false;
+                    }
                 },
 
                 changeSong(song) {
@@ -942,14 +960,10 @@
                     this.currentAlbum = song.album;
                     this.currentArtwork = song.artwork;
 
-                    this.audio.src = song.path;
-                    this.restoreTime = false;
-                    this.audio.currentTime = 0;
-                    this.audio.play();
-                    this.playing = true;
                     this.clearTime();
-
                     this.saveCurrentSong();
+
+                    this.play({ src: song.path, resetTime: true });
 
                     this.$wire.addToQueue(song.id);
                 },
@@ -969,21 +983,15 @@
                     this.currentAlbum = song.album;
                     this.currentArtwork = song.artwork;
 
-                    this.audio.src = song.path;
-                    this.restoreTime = false;
-                    this.audio.currentTime = 0;
-                    this.audio.play();
-                    this.playing = true;
-
                     this.clearTime();
                     this.saveCurrentSong();
+
+                    this.play({ src: song.path, resetTime: true });
                 },
 
                 playNext() {
                     if (this.repeat === '{{ Repeat::ONE }}') {
-                        this.audio.currentTime = 0;
-                        this.audio.play();
-                        this.playing = true;
+                        this.play();
                         this.progress = 0;
 
                         return;
@@ -1006,9 +1014,7 @@
                     if (this.currentIndex === 0 || this.audio.currentTime > 5) {
                         this.progress = 0;
                         this.currentTimeDisplay = '0:00';
-                        this.audio.currentTime = 0;
-                        this.audio.play();
-                        this.playing = true;
+                        this.play({ resetTime: true });
 
                         return;
                     }

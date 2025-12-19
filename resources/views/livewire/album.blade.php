@@ -14,6 +14,7 @@
                             'artist' => $song->display_artist,
                             'path' => Storage::disk('s3')->url($song->path),
                             'playtime' => $song->playtime,
+                            'album' => $album->name,
                             'artwork' => Storage::disk('s3')->url($album->artwork_url)
                         ])
                     })"

@@ -103,7 +103,7 @@
 
                                 <input
                                     class="absolute inset-0 opacity-0 cursor-pointer"
-                                    style="writing-mode: bt-lr;"
+                                    style="writing-mode: vertical-lr; direction: rtl;"
                                     type="range"
                                     :min="index === 0 ? -6 : -12"
                                     :max="index === 0 ? 6 : 12"
@@ -111,6 +111,7 @@
                                     x-model.number="gains[index]"
                                     x-on:input="updateFilter(index)"
                                     x-on:mouseup="saveEQ"
+                                    x-on:touchend="saveEQ"
                                 />
                             </div>
 
