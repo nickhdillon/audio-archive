@@ -36,10 +36,11 @@
                                     class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                                     @if (auth()->user()->avatar)
                                         <img
-                                            src="{{ Storage::disk('s3')->url((app()->isProduction() ? 'users/' : 'users-test/')
-                                            . auth()->id()
-                                            . '/avatars/'
-                                            . auth()->user()->avatar
+                                            src="{{ Storage::disk('s3')->url(
+                                                (app()->isProduction() ? 'users/' : 'users-test/')
+                                                . auth()->id()
+                                                . '/avatars/'
+                                                . auth()->user()->avatar
                                             ) }}"
                                         />
                                     @else
