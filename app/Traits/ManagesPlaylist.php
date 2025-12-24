@@ -11,12 +11,12 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Renderless;
 use Illuminate\Database\Eloquent\Collection;
 
-trait ManagesPlaylists
+trait ManagesPlaylist
 {
     public Collection $playlists;
 
     #[On('playlist-saved')]
-	public function mountManagesPlaylists(): void
+	public function mountManagesPlaylist(): void
     {
         $this->playlists = auth()
             ->user()

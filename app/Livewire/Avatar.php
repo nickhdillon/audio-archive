@@ -40,7 +40,9 @@ class Avatar extends Component
 
     public function mount(): void
     {
-        $this->s3_path = 'users/' . auth()->id() . '/avatars';
+        $this->s3_path = (app()->isProduction() ? 'users/' : 'users-test/')
+            . auth()->id()
+            . '/avatars';
         
         $this->avatar = auth()->user()->avatar;
     }

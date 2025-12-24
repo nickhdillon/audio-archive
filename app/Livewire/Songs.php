@@ -8,15 +8,29 @@ use App\Models\Song;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
-use App\Traits\ManagesPlaylists;
+use App\Traits\ManagesQueue;
+use App\Interfaces\PlaysSongs;
+use App\Traits\ManagesPlaylist;
 use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class Songs extends Component
+class Songs extends Component implements PlaysSongs
 {
-    use WithPagination, ManagesPlaylists;
+    use WithPagination, ManagesQueue, ManagesPlaylist;
 
     public string $search = '';
+
+    public function playSongs(bool $shuffle = false): void
+    {
+        $this->play(
+            songs: Song::query()
+                ->whereRelation('album.artist', 'user_id', auth()->id())
+                ->orderBy('title')
+                ->pluck('id'),
+            source: 'songs',
+            shuffle: $shuffle,
+        );
+    }
 
     public function render(): View
     {
@@ -31,7 +45,7 @@ class Songs extends Component
                     $query->where('title', 'like', "%{$this->search}%");
                 })
                 ->orderBy('title')
-                ->paginate(20)
+                ->paginate(75)
         ]);
     }
 }

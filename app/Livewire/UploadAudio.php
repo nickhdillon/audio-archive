@@ -102,8 +102,11 @@ class UploadAudio extends Component
                     ['name' => $meta['album']]
                 );
 
-                $s3_path = 'users/' . auth()->id() . '/files/'
-                    . Str::slug($artist->name) . '/'
+                $s3_path = (app()->isProduction() ? 'users/' : 'users-test/')
+                    . auth()->id()
+                    . '/files/'
+                    . Str::slug($artist->name)
+                    . '/'
                     . Str::slug($album->name);
                 
                 $stored_path = $file->storePubliclyAs(

@@ -33,6 +33,12 @@ it('can see songs', function () {
         ->assertHasNoErrors();
 });
 
+it('can play songs', function () {
+    livewire(Songs::class)
+        ->call('playSongs')
+        ->assertHasNoErrors();
+});
+
 it('can search songs', function () {
     $song_title = Song::first()->title;
 

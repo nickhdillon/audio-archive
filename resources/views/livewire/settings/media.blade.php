@@ -28,7 +28,9 @@ new class extends Component {
             if ($artwork_url) {
                 $artwork_url = Str::replace('100x100bb.jpg', '2000x2000bb.jpg', $artwork_url);
 
-                $path = 'users/' . auth()->id() . "/files/{$album->artist->slug}/{$album->slug}/artwork.jpg";
+                $path = (app()->isProduction() ? 'users/' : 'users-test/')
+                    . auth()->id()
+                    . "/files/{$album->artist->slug}/{$album->slug}/artwork.jpg";
 
                 $image = Http::get($artwork_url)->body();
 

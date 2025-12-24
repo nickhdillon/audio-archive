@@ -23,6 +23,7 @@ class Artists extends Component
                 ->when(Str::length($this->search) >= 1, function (Builder $query): void {
                     $query->where('name', 'like', "%{$this->search}%");
                 })
+                ->orderBy('name')
                 ->paginate(50)
         ]);
     }

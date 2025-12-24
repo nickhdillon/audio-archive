@@ -23,7 +23,7 @@ it('can upload and submit an mp3 file', function () {
         ->call('submit')
         ->assertHasNoErrors();
 
-    $this->assertTrue(Storage::disk('s3')->exists("users/1/files/unknown-artist/unknown-album/{$file->getClientOriginalName()}"));
+    $this->assertTrue(Storage::disk('s3')->exists("users-test/1/files/unknown-artist/unknown-album/{$file->getClientOriginalName()}"));
 });
 
 it('can upload and submit an m4a file', function () {
@@ -34,7 +34,7 @@ it('can upload and submit an m4a file', function () {
         ->call('submit')
         ->assertHasNoErrors();
 
-    $this->assertTrue(Storage::disk('s3')->exists("users/1/files/unknown-artist/unknown-album/{$file->getClientOriginalName()}"));
+    $this->assertTrue(Storage::disk('s3')->exists("users-test/1/files/unknown-artist/unknown-album/{$file->getClientOriginalName()}"));
 });
 
 it('can validate an uploaded file', function () {

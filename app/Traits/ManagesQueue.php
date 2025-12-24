@@ -4,11 +4,59 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
+use Flux\Flux;
 use App\Enums\Repeat;
 use App\Models\SongQueue;
+use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 trait ManagesQueue
 {
+	public function play(Collection $songs, string $source, bool $shuffle = false): void
+    {
+        $user = auth()->user();
+
+        SongQueue::where('user_id', $user->id)->delete();
+
+        if ($shuffle) $songs = $songs->shuffle();
+
+        $queue_data = $songs->map(fn(int $song_id, int $index): array => [
+            'user_id' => $user->id,
+            'song_id' => $song_id,
+            'position' => $index,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ])->toArray();
+
+        SongQueue::insert($queue_data);
+
+        $disk = Storage::disk('s3');
+
+        $queue = $user->queue()
+            ->with(['song', 'song.album'])
+            ->orderBy('position')
+            ->oldest()
+            ->get()
+            ->map(function (SongQueue $item) use ($disk): array {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->song->title,
+                    'artist' => $item->song->display_artist,
+                    'path' => $disk->url($item->song->path),
+                    'playtime' => $item->song->playtime,
+                    'artwork' => $disk->url($item->song->album->artwork_url),
+                ];
+            });
+
+        $this->dispatch('replace-queue', queue: $queue);
+
+        Flux::toast(
+            variant: 'success',
+            text: $shuffle ? "Shuffling {$source}" : Str::title($source) . ' added to queue',
+        );
+    }
+
 	public function shuffle(int $current_song_id): void
 	{
 		$user = auth()->user();

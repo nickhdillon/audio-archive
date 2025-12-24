@@ -4,73 +4,35 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use Flux\Flux;
 use Livewire\Component;
-use App\Models\SongQueue;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
+use App\Traits\ManagesQueue;
 use App\Models\PlaylistSong;
-use App\Traits\ManagesPlaylists;
+use App\Interfaces\PlaysSongs;
+use App\Traits\ManagesPlaylist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Playlist as ModelsPlaylist;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class Playlist extends Component
+class Playlist extends Component implements PlaysSongs
 {
-    use WithPagination, ManagesPlaylists;
+    use WithPagination, ManagesQueue, ManagesPlaylist;
 
     public ModelsPlaylist $playlist;
 
     public string $search = '';
 
-    public function play(bool $shuffle = false): void
+    public function playSongs(bool $shuffle = false): void
     {
-        $user = auth()->user();
-
-        SongQueue::where('user_id', $user->id)->delete();
-
-        $songs = $this->playlist->songs()
-            ->orderBy('position')
-            ->pluck('song_id');
-
-        if ($shuffle) $songs = $songs->shuffle();
-
-        $queue_data = $songs->map(fn(int $song_id, int $index): array => [
-            'user_id' => $user->id,
-            'song_id' => $song_id,
-            'position' => $index,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ])->toArray();
-
-        SongQueue::insert($queue_data);
-
-        $disk = Storage::disk('s3');
-
-        $queue = $user->queue()
-            ->with(['song', 'song.album'])
-            ->orderBy('position')
-            ->oldest()
-            ->get()
-            ->map(function (SongQueue $item) use ($disk): array {
-                return [
-                    'id' => $item->id,
-                    'title' => $item->song->title,
-                    'artist' => $item->song->display_artist,
-                    'path' => $disk->url($item->song->path),
-                    'playtime' => $item->song->playtime,
-                    'artwork' => $disk->url($item->song->album->artwork_url),
-                ];
-            });
-
-        $this->dispatch('start-playlist', queue: $queue);
-
-        Flux::toast(
-            variant: 'success',
-            text: $shuffle ? 'Shuffling playlist' : 'Playlist added to queue',
+        $this->play(
+            songs: $this->playlist->songs()
+                ->orderBy('position')
+                ->pluck('song_id'),
+            source: 'playlist',
+            shuffle: $shuffle
         );
     }
 

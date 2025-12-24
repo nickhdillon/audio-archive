@@ -34,6 +34,12 @@ it('can see albums', function () {
         ->assertHasNoErrors();
 });
 
+it('can play artist songs', function () {
+    livewire(Artist::class, ['artist' => ModelsArtist::first()])
+        ->call('playSongs')
+        ->assertHasNoErrors();
+});
+
 it('can search albums', function () {
     $artist = ModelsArtist::first();
 

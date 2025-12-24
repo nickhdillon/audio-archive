@@ -13,7 +13,7 @@
                 <flux:button :href="route('album', $album)" wire:navigate variant="filled"
                     @class([
                         'p-0!' => $album->artwork_url,
-                        'size-40! border hover:border-neutral-300 border-neutral-200 dark:border-neutral-600 hover:dark:border-neutral-500 shadow-xs'
+                        'size-40! border hover:border-neutral-200 border-neutral-300 dark:border-neutral-700 hover:dark:border-neutral-600 shadow-xs shadow-black/10 dark:shadow-black/20'
                     ])
                 >
                     @if ($album->artwork_url)

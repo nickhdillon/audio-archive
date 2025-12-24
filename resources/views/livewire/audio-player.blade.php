@@ -250,7 +250,7 @@
         
                                                 <div class="flex items-center justify-between gap-6">
                                                     <div class="flex items-center gap-2.5 truncate">
-                                                        <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
+                                                        <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-300 dark:border-neutral-700 shadow-xs shadow-black/10 dark:shadow-black/20 flex items-center justify-center">
                                                             <img
                                                                 x-cloak
                                                                 x-show="currentArtwork"
@@ -528,7 +528,7 @@
 
                                             <div class="flex items-center justify-between gap-6">
                                                 <div class="flex items-center gap-2.5 truncate">
-                                                    <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
+                                                    <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-300 dark:border-neutral-700 shadow-xs shadow-black/10 dark:shadow-black/20 flex items-center justify-center">
                                                         <img
                                                             x-cloak
                                                             x-show="currentArtwork"
@@ -606,7 +606,7 @@
                                                     x-sort:ignore
                                                     class="flex flex-1 min-w-0 text-left cursor-pointer items-center group gap-2.5"
                                                 >
-                                                    <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
+                                                    <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-300 dark:border-neutral-700 shadow-xs shadow-black/10 dark:shadow-black/20 flex items-center justify-center">
                                                         @if ($song['artwork'])
                                                             <img src="{{ $song['artwork'] }}" class="object-cover inset-0 rounded-[3px] w-full" />
                                                         @else
@@ -868,7 +868,7 @@
                         }
                     });
 
-                    document.addEventListener('start-playlist', (e) => {
+                    document.addEventListener('replace-queue', (e) => {
                         this.queue = e.detail.queue;
 
                         localStorage.removeItem(this.keys.index);

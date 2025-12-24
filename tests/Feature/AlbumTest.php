@@ -25,11 +25,26 @@ beforeEach(function () {
     );
 });
 
-test('can see songs', function () {
+it('can see songs', function () {
 	$album = ModelsAlbum::first();
 
     livewire(Album::class, ['album' => $album])
         ->assertSee($album->songs()->first()->title)
+        ->assertHasNoErrors();
+});
+
+it('can play album songs', function () {
+    livewire(Album::class, ['album' => ModelsAlbum::first()])
+        ->call('playSongs')
+        ->assertHasNoErrors();
+});
+
+it('can search songs', function () {
+    $album = ModelsAlbum::first();
+
+    livewire(Album::class, ['album' => ModelsAlbum::first()])
+        ->set('search', $album->name)
+        ->assertSeeText($album->name)
         ->assertHasNoErrors();
 });
 

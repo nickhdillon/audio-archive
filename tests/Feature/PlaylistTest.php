@@ -75,8 +75,8 @@ it('can play a playlist', function () {
     }
 
     livewire(Playlist::class, ['playlist' => $playlist_2])
-        ->call('play')
-        ->assertDispatched('start-playlist')
+        ->call('playSongs', shuffle: false)
+        ->assertDispatched('replace-queue')
         ->assertHasNoErrors();
 
     expect(SongQueue::count())->toBe(4);

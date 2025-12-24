@@ -10,7 +10,12 @@
         <flux:dropdown position="top" align="start" class="absolute bg-white dark:bg-neutral-900 -ml-6 pl-5 pr-1 z-50">
             @if (auth()->user()->avatar)
                 <flux:sidebar.profile
-                    :avatar="Storage::disk('s3')->url('users/' . auth()->id() . '/avatars/' . auth()->user()->avatar)"
+                    :avatar="Storage::disk('s3')->url(
+                        (app()->isProduction() ? 'users/' : 'users-test/')
+                        . auth()->id()
+                        . '/avatars/'
+                        . auth()->user()->avatar
+                    )"
                     :chevron="false"
                     circle
                 />
@@ -31,7 +36,12 @@
                                     class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                                     @if (auth()->user()->avatar)
                                         <img
-                                            src="{{ Storage::disk('s3')->url('users/' . auth()->id() . '/avatars/' . auth()->user()->avatar) }}" />
+                                            src="{{ Storage::disk('s3')->url((app()->isProduction() ? 'users/' : 'users-test/')
+                                            . auth()->id()
+                                            . '/avatars/'
+                                            . auth()->user()->avatar
+                                            ) }}"
+                                        />
                                     @else
                                         <p>{{ auth()->user()->initials() }}</p>
                                     @endif

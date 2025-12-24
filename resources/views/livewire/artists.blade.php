@@ -7,7 +7,7 @@
         class="sm:max-w-[300px]!"
     />
 
-    <div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-600">
+    <div class="flex flex-col divide-y divide-neutral-300 dark:divide-neutral-700">
         @foreach ($artists as $artist)
             <div class="flex items-center justify-between py-3 first:pt-0 last:pb-0">
                 <a href="{{ route('artist', $artist) }}" wire:navigate class="flex text-left cursor-pointer items-center group gap-2.5"
@@ -34,5 +34,5 @@
         @endforeach
     </div>
 
-    <flux:pagination :paginator="$artists" class="border-neutral-200! dark:border-neutral-600! -mt-1" />
+    <flux:pagination :paginator="$artists" class="border-neutral-300! dark:border-neutral-700! -mt-1" />
 </div>

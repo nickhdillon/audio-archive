@@ -1,13 +1,27 @@
 <div class="space-y-4 mb-22">
-    <flux:input
-        icon="magnifying-glass"
-        placeholder="Search..."
-        wire:model.live.debounce.300ms='search'
-        clearable
-        class="sm:max-w-[300px]!"
-    />
+    <div class="flex items-center gap-6">
+        <div class="flex items-center gap-4">
+            <button class="hover:scale-110 cursor-pointer bg-neutral-800 dark:bg-neutral-100 flex items-center justify-center rounded-full size-7"
+                wire:click='playSongs'
+            >
+                <flux:icon.play class="size-[15px] stroke-neutral-50 dark:stroke-neutral-800 fill-neutral-100 dark:fill-neutral-800" />
+            </button>
 
-    <div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-600">
+            <button wire:click='playSongs(true)' class="hover:scale-110 cursor-pointer">
+                <flux:icon.shuffle class="size-[18px] stroke-[2.5px] text-neutral-800 dark:text-neutral-100" />
+            </button>
+        </div>
+
+        <flux:input
+            icon="magnifying-glass"
+            placeholder="Search..."
+            wire:model.live.debounce.300ms='search'
+            clearable
+            class="max-w-[250px]!"
+        />
+    </div>
+
+    <div class="flex flex-col divide-y divide-neutral-300 dark:divide-neutral-700">
         @foreach ($songs as $song)
             <div class="flex items-center justify-between py-3 gap-4 first:pt-0 last:pb-0">
                 <button class="flex text-left flex-1 min-w-0 cursor-pointer items-center group gap-2.5"
@@ -23,7 +37,7 @@
                         ])
                     })"
                 >
-                    <div class="size-10 bg-neutral-100 dark:bg-neutral-700 rounded-sm border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
+                    <div class="size-10 bg-neutral-100 dark:bg-neutral-800 rounded-sm border border-neutral-300 dark:border-neutral-700 shadow-xs shadow-black/10 dark:shadow-black/20 flex items-center justify-center">
                         @if ($song->album->artwork_url)
                             <img
                                 src="{{ Storage::disk('s3')->url($song->album->artwork_url) }}"
@@ -94,5 +108,5 @@
         @endforeach
     </div>
 
-    <flux:pagination :paginator="$songs" class="border-neutral-200! dark:border-neutral-600! -mt-1" />
+    <flux:pagination :paginator="$songs" class="border-neutral-300! dark:border-neutral-700! -mt-1" />
 </div>

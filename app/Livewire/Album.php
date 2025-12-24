@@ -5,29 +5,46 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Traits\ManagesPlaylists;
+use Illuminate\Support\Str;
+use App\Traits\ManagesQueue;
+use App\Traits\ManagesPlaylist;
+use App\Interfaces\PlaysSongs;
 use Illuminate\Contracts\View\View;
 use App\Models\Album as ModelsAlbum;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class Album extends Component
+class Album extends Component implements PlaysSongs
 {
-    use ManagesPlaylists;
+    use ManagesQueue, ManagesPlaylist;
 
     public ModelsAlbum $album;
-    
-    public function mount(): void
+
+    public string $search = '';
+
+    public function playSongs(bool $shuffle = false): void
     {
-        $this->album->loadMissing([
-            'artist',
-            'songs' => function (HasMany $query): HasMany {
-                return $query->orderBy('track_number');
-            }
-        ]);
+        $this->play(
+            songs: $this->album->songs()
+                ->orderBy('track_number')
+                ->pluck('id'),
+            source: 'playlist',
+            shuffle: $shuffle
+        );
     }
 
     public function render(): View
     {
-        return view('livewire.album');
+        $this->album->loadMissing(['artist', 'songs']);
+
+        return view('livewire.album', [
+            'songs' => $this->album
+                ->songs()
+                ->with('album:id,name,artwork_url')
+                ->when(Str::length($this->search) >= 1, function (Builder $query): void {
+                    $query->where('title', 'like', "%{$this->search}%");
+                })
+                ->orderBy('track_number')
+                ->get()
+        ]);
     }
 }

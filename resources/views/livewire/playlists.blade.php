@@ -19,7 +19,7 @@
         </flux:modal.trigger>
     </div>
 
-    <div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-600">
+    <div class="flex flex-col divide-y divide-neutral-300 dark:divide-neutral-700">
         @foreach ($playlists as $playlist)
             <div class="flex items-center justify-between py-3 first:pt-0 last:pb-0">
                 <a href="{{ route('playlist', $playlist) }}" wire:navigate class="flex text-left cursor-pointer items-center group gap-2.5"

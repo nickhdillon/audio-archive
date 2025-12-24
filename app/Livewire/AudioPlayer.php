@@ -9,7 +9,7 @@ use Livewire\Component;
 use App\Models\SongQueue;
 use Livewire\Attributes\On;
 use App\Traits\ManagesQueue;
-use App\Traits\ManagesPlaylists;
+use App\Traits\ManagesPlaylist;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Storage;
 
 class AudioPlayer extends Component
 {
-    use ManagesQueue, ManagesPlaylists;
+    use ManagesQueue, ManagesPlaylist;
 
-    #[On('start-playlist'), Computed]
+    #[On('replace-queue'), Computed]
     public function queue(): Collection
     {
         $disk = Storage::disk('s3');

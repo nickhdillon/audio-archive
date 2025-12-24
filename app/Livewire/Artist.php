@@ -5,20 +5,33 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Traits\ManagesPlaylists;
+use App\Traits\ManagesQueue;
+use App\Interfaces\PlaysSongs;
+use App\Traits\ManagesPlaylist;
 use Illuminate\Contracts\View\View;
 use App\Models\Artist as ModelsArtist;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class Artist extends Component
+class Artist extends Component implements PlaysSongs
 {
-    use ManagesPlaylists;
+    use ManagesQueue, ManagesPlaylist;
 
     public ModelsArtist $artist;
     
     public string $search = '';
 
     public string $tab = 'albums';
+
+    public function playSongs(bool $shuffle = false): void
+    {
+        $this->play(
+            songs: $this->artist->songs()
+                ->orderBy('title')
+                ->pluck('songs.id'),
+            source: 'playlist',
+            shuffle: $shuffle
+        );
+    }
 
     public function render(): View
     {
