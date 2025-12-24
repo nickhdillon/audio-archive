@@ -6,7 +6,7 @@
             x-on:click="expanded = true"
         >
             <div class="flex items-center truncate gap-2">
-                <div class="size-8 shrink-0 border border-neutral-300 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
+                <div class="size-9 shrink-0 border border-neutral-300 dark:border-neutral-700 rounded shadow-md shadow-black/10 dark:shadow-black/20 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
                     <img
                         x-cloak
                         x-show="currentArtwork"
@@ -28,19 +28,19 @@
             </div>
 
             <div class="flex items-center gap-6 p-2">
-                <flux:icon.skip-back x-on:click.stop="playPrevious()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-3.5" />
+                <flux:icon.skip-back x-on:click.stop="playPrevious()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-4" />
 
                 <button x-on:click.stop="toggle()" class="focus:outline-none cursor-pointer">
                     <template x-if="!playing">
-                        <flux:icon.play class="stroke-neutral-800 fill-neutral-800 dark:stroke-neutral-100 dark:fill-neutral-100 size-3.5 cursor-pointer" />
+                        <flux:icon.play class="stroke-neutral-800 fill-neutral-800 dark:stroke-neutral-100 dark:fill-neutral-100 size-4 cursor-pointer" />
                     </template>
 
                     <template x-if="playing">
-                        <flux:icon.pause class="stroke-neutral-800 fill-neutral-800 dark:stroke-neutral-100 dark:fill-neutral-100 size-3.5 cursor-pointer" />
+                        <flux:icon.pause class="stroke-neutral-800 fill-neutral-800 dark:stroke-neutral-100 dark:fill-neutral-100 size-4 cursor-pointer" />
                     </template>
                 </button>
 
-                <flux:icon.skip-forward x-on:click.stop="playNext()" class="text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-3.5" />
+                <flux:icon.skip-forward x-on:click.stop="playNext()" class="text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-4" />
             </div>
 
             <div x-cloak class="absolute bottom-0 mx-[6.5px] left-0 right-0 h-[1.7px] bg-neutral-800/20 dark:bg-neutral-300/20 rounded overflow-hidden pointer-events-none">
