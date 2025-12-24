@@ -23,6 +23,7 @@ class Albums extends Component
                 ->when(Str::length($this->search) >= 1, function (Builder $query): void {
                     $query->where('albums.name', 'like', "%{$this->search}%");
                 })
+                ->orderBy('name')
                 ->get()
         ]);
     }
