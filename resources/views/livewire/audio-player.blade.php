@@ -762,6 +762,8 @@
                     this.audio = document.getElementById('audio-player');
                     if (!this.audio) return;
 
+                    if (!this.queue.length) this.resetKeysAndLocalStorage();
+
                     this.restoreCurrentSong();
                     this.setupEventListeners();
                     this.restoreMuted();
@@ -804,6 +806,32 @@
                         this.muted = storedMuted === 'true';
                         this.audio.muted = this.muted;
                     }
+                },
+
+                resetKeysAndLocalStorage() {
+                    localStorage.removeItem(this.keys.index);
+                    localStorage.removeItem(this.keys.title);
+                    localStorage.removeItem(this.keys.artist);
+                    localStorage.removeItem(this.keys.path);
+                    localStorage.removeItem(this.keys.playtime);
+                    localStorage.removeItem(this.keys.album);
+                    localStorage.removeItem(this.keys.artwork);
+                    localStorage.removeItem(this.keys.time);
+                    localStorage.removeItem(this.keys.muted);
+
+                    this.currentIndex = 0;
+                    this.currentTitle = null;
+                    this.currentArtist = null;
+                    this.currentPath = null;
+                    this.currentPlaytime = null;
+                    this.currentAlbum = null;
+                    this.currentArtwork = null;
+                    this.progress = 0;
+                    this.currentTimeDisplay = '0:00';
+                    this.restoreTime = true;
+                    this.playing = false;
+                    this.dragging = false;
+                    this.dragProgress = null;
                 },
 
                 formatTime(seconds) {
@@ -871,28 +899,7 @@
                     document.addEventListener('replace-queue', (e) => {
                         this.queue = e.detail.queue;
 
-                        localStorage.removeItem(this.keys.index);
-                        localStorage.removeItem(this.keys.title);
-                        localStorage.removeItem(this.keys.artist);
-                        localStorage.removeItem(this.keys.path);
-                        localStorage.removeItem(this.keys.playtime);
-                        localStorage.removeItem(this.keys.album);
-                        localStorage.removeItem(this.keys.artwork);
-                        localStorage.removeItem(this.keys.time);
-
-                        this.currentIndex = 0;
-                        this.currentTitle = null;
-                        this.currentArtist = null;
-                        this.currentPath = null;
-                        this.currentPlaytime = null;
-                        this.currentAlbum = null;
-                        this.currentArtwork = null;
-                        this.progress = 0;
-                        this.currentTimeDisplay = '0:00';
-                        this.restoreTime = true;
-                        this.playing = false;
-                        this.dragging = false;
-                        this.dragProgress = null;
+                        this.resetKeysAndLocalStorage();
 
                         if (this.queue.length > 0) {
                             this.changeSongByIndex(0);
