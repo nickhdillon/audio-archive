@@ -6,23 +6,36 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
 new class extends Component {
+    public array $routes = [];
+
     public string $name = '';
 
     public string $email = '';
+
+    public string $preferred_homepage = '';
 
     protected function rules(): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore(Auth::id())],
+            'preferred_homepage' => ['nullable', 'string'],
         ];
     }
 
     public function mount(): void
     {
+        $this->routes = [
+            'artists' => 'Artists',
+            'albums' => 'Albums',
+            'songs' => 'Songs',
+            'playlists' => 'Playlists',
+        ];
+
         $user = Auth::user();
         $this->name = $user->name;
         $this->email = $user->email;
+        $this->preferred_homepage = $user->preferred_homepage ?? 'artists';
     }
 
     public function updateProfileInformation(): void
@@ -34,6 +47,7 @@ new class extends Component {
             ->update([
                 'name' => $this->name,
                 'email' => $this->email,
+                'preferred_homepage' => $this->preferred_homepage,
             ]);
 
         $this->dispatch('profile-updated', name: $this->name);
@@ -61,6 +75,20 @@ new class extends Component {
                 <flux:input type="email" wire:model='email' required />
 
                 <flux:error name="email" />
+            </flux:field>
+
+            <flux:field>
+                <flux:label>Preferred Homepage</flux:label>
+
+                <flux:select variant="listbox" placeholder="Select a page" wire:model="preferred_homepage">
+                    @foreach ($routes as $key => $value)
+                        <flux:select.option value="{{ $key }}">
+                            {{ $value }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
+
+                <flux:error name="preferred_homepage" />
             </flux:field>
 
             <div class="flex items-center gap-4">

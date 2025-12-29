@@ -27,6 +27,7 @@ class UserFactory extends Factory
             'avatar' => null,
             'name' => 'Admin',
             'email' => 'admin@example.com',
+            'preferred_homepage' => 'artists',
             'password' => 'password',
             'shuffle' => false,
             'repeat' => Repeat::OFF,
