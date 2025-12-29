@@ -20,6 +20,10 @@ export default (gains, presets) => ({
 
 			this.applyPreset(preset.gains);
 		});
+
+		document.addEventListener('preset-reset', () => {
+			this.gains = [0, 0, 0, 0, 0, 0];
+		});
 	},
 
 	updateFilter(index) {

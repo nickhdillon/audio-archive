@@ -94,7 +94,7 @@ it('can set the preset to manual', function() {
         ->assertHasNoErrors();
 });
 
-it('can reset the preset', function() {
+it('can reset the preset and dispatch event', function() {
     $preset = Preset::BASS_BOOST;
 
     $preset_model = EqPreset::factory()->create([
@@ -114,7 +114,7 @@ it('can reset the preset', function() {
         ->assertSet('is_user_preset', false)
         ->call('resetPreset')
         ->assertHasNoErrors()
-        ->assertRedirectToRoute('media.edit');
+        ->assertDispatched('preset-reset');
 
     $this->assertDatabaseHas('users', [
         'id' => auth()->id(),

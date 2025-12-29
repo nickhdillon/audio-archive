@@ -95,7 +95,9 @@ class Equalizer extends Component
             'eq_values' => null
         ]);
 
-        $this->redirectRoute('media.edit', navigate: true);
+        $this->resetExcept('user');
+
+        $this->dispatch('preset-reset');
     }
 
     #[On('eq-changed')]

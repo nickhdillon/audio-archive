@@ -21,7 +21,7 @@
             @endforeach
         </flux:select>
 
-        <div x-cloak x-show="!$wire.is_system_preset" class="ml-auto">
+        <div x-cloak x-show="!$wire.is_system_preset" @class(['ml-auto' => request()->routeIs('media.edit')])>
             @if ($is_user_preset) 
                 <flux:button
                     icon="trash"
