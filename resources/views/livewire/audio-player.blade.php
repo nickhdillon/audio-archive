@@ -244,7 +244,11 @@
                                     </flux:heading>
         
                                     <div x-show="queue.length > 0 && currentPath" class="space-y-6">
-                                        <div class="space-y-3" x-sort="$wire.handleSort($item, $position)">
+                                        <div
+                                            class="space-y-3"
+                                            wire:sortable="updateSongOrder"
+                                            wire:sortable.options="{ animation: 100, ghostClass: 'sortable-queue' }"
+                                        >
                                             <div x-show="currentPath">
                                                 <flux:heading class="mb-2 text-sm">Now Playing</flux:heading>
         
@@ -316,16 +320,15 @@
                                             @foreach ($this->queue() as $song)
                                                 <div class="flex items-center gap-6"
                                                     x-show="{{ $loop->index }} > currentIndex"
-                                                    x-sort:item="{{ $song['id'] }}"
-                                                    wire:key='{{ $song['id'] }}'
+                                                    wire:sortable.item="{{ $song['id'] }}"
+                                                    wire:key="song-{{ $song['id'] }}"
                                                 >
-                                                    <span class="cursor-move" x-sort:handle>
+                                                    <span class="cursor-move" wire:sortable.handle>
                                                         <flux:icon.text-align-justify class="cursor-move size-4 -mr-3 dark:text-neutral-100" />
                                                     </span>
         
                                                     <button
                                                         x-on:click="changeSongByIndex({{ $loop->index }})"
-                                                        x-sort:ignore
                                                         class="flex flex-1 min-w-0 text-left cursor-pointer items-center group gap-2.5"
                                                     >
                                                         <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-600 shadow-xs flex items-center justify-center">
@@ -522,7 +525,11 @@
                                 </flux:heading>
 
                                 <div x-show="queue.length > 0 && currentPath" class="space-y-6">
-                                    <div class="space-y-3" x-sort="$wire.handleSort($item, $position)">
+                                    <div
+                                        class="space-y-3"
+                                        wire:sortable="updateSongOrder"
+                                        wire:sortable.options="{ animation: 100, ghostClass: 'sortable-queue' }"
+                                    >
                                         <div x-show="currentPath">
                                             <flux:heading class="mb-2 text-sm">Now Playing</flux:heading>
 
@@ -594,16 +601,15 @@
                                         @foreach ($this->queue() as $song)
                                             <div class="flex items-center gap-6"
                                                 x-show="{{ $loop->index }} > currentIndex"
-                                                x-sort:item="{{ $song['id'] }}"
-                                                wire:key='{{ $song['id'] }}'
+                                                wire:sortable.item="{{ $song['id'] }}"
+                                                wire:key="song-{{ $song['id'] }}"
                                             >
-                                                <span class="cursor-move" x-sort:handle>
+                                                <span class="cursor-move" wire:sortable.handle>
                                                     <flux:icon.text-align-justify class="cursor-move size-4 -mr-3 dark:text-neutral-100" />
                                                 </span>
 
                                                 <button
                                                     x-on:click="changeSongByIndex({{ $loop->index }})"
-                                                    x-sort:ignore
                                                     class="flex flex-1 min-w-0 text-left cursor-pointer items-center group gap-2.5"
                                                 >
                                                     <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-300 dark:border-neutral-700 shadow-xs shadow-black/10 dark:shadow-black/20 flex items-center justify-center">

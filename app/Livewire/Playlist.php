@@ -12,7 +12,7 @@ use App\Traits\ManagesQueue;
 use App\Models\PlaylistSong;
 use App\Interfaces\PlaysSongs;
 use App\Traits\ManagesPlaylist;
-use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Renderless;
 use Illuminate\Contracts\View\View;
 use App\Models\Playlist as ModelsPlaylist;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -36,31 +36,16 @@ class Playlist extends Component implements PlaysSongs
         );
     }
 
-    public function handleSort(int $item, int $position): void
+    #[Renderless]
+    public function updateSongOrder(array $list): void
     {
-        $playlist_song = PlaylistSong::query()
-            ->where('playlist_id', $this->playlist->id)
-            ->where('song_id', $item)
-            ->firstOrFail();
-
-        DB::transaction(function () use ($playlist_song, $position): void {
-            $current = $playlist_song->position;
-            $after = $position + 1;
-
-            if ($current === $after) return;
-
-            $playlist_song->update(['position' => -1]);
-
-            $block = PlaylistSong::query()
+        $this->updateSortablePositions(
+            $list,
+            fn (array $item) => PlaylistSong::query()
                 ->where('playlist_id', $this->playlist->id)
-                ->whereBetween('position', [min($current, $after), max($current, $after)]);
-
-            $need_to_shift_down = $current < $after;
-
-            $need_to_shift_down ? $block->decrement('position') : $block->increment('position');
-
-            $playlist_song->update(['position' => $after]);
-        });
+                ->where('song_id', $item['value'])
+                ->first()
+        );
     }
 
     #[On('playlist-saved')]

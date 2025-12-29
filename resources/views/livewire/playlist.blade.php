@@ -38,19 +38,18 @@
     </div>
 
     <div class="flex flex-col divide-y divide-neutral-300 dark:divide-neutral-700"
-        x-sort="$wire.handleSort($item, $position)"
+        wire:sortable="updateSongOrder" wire:sortable.options="{ animation: 100, ghostClass: 'sortable-playlist' }"
     >
         @forelse ($songs as $song)
             <div class="flex items-center justify-between py-3 gap-4 first:pt-0 last:pb-0"
-                x-sort:item="{{ $song->id }}"
-                wire:key='{{ $song->id }}'
+                wire:sortable.item="{{ $song->id }}"
+                wire:key="song-{{ $song->id }}"
             >
-                <span class="cursor-move" x-sort:handle>
+                <span class="cursor-move" wire:sortable.handle>
                     <flux:icon.text-align-justify class="cursor-move size-4 -mr-1 dark:text-neutral-100" />
                 </span>
 
                 <button
-                    x-sort:ignore
                     class="flex text-left flex-1 min-w-0 cursor-pointer items-center group gap-2.5"
                     x-on:click="$dispatch('change-song', { song: 
                         @js([

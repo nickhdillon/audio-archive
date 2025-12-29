@@ -12,7 +12,7 @@ use App\Traits\ManagesQueue;
 use App\Traits\ManagesPlaylist;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Renderless;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 
@@ -49,26 +49,18 @@ class AudioPlayer extends Component
             });
     }
 
-    public function handleSort(int $item, int $position): void
+    #[Renderless]
+    public function updateSongOrder(array $list): void
     {
-        $song = SongQueue::findOrFail($item);
+        $user_id = auth()->id();
 
-        DB::transaction(function () use ($song, $position): void {
-            $current = $song->position;
-            $after = $position - 1;
-
-            if ($current === $after) return;
-
-            $song->update(['position' => -1]);
-
-            $block = SongQueue::whereBetween('position', [min($current, $after), max($current, $after)]);
-
-            $need_to_shift_down = $current < $after;
-
-            $need_to_shift_down ? $block->decrement('position') : $block->increment('position');
-
-            $song->update(['position' => $after]);
-        });
+        $this->updateSortablePositions(
+            $list,
+            fn (array $item) => SongQueue::query()
+                ->where('id', $item['value'])
+                ->where('user_id', $user_id)
+                ->first()
+        );
     }
 
     #[On('add-to-queue')]

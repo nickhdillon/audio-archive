@@ -32,12 +32,27 @@ it('can sort songs in the queue', function () {
     $song_2 = Song::find(2);
     $song_3 = Song::find(3);
 
+    $list = [
+        [
+            'order' => 2,
+            'value' => 1,
+        ],
+        [
+            'order' => 1,
+            'value' => 2,
+        ],
+        [
+            'order' => 3,
+            'value' => 3,
+        ],
+    ];
+
     livewire(AudioPlayer::class)
         ->call('addToQueue', $song_1->id)
         ->call('addToQueue', $song_2->id)
         ->call('addToQueue', $song_3->id)
         ->assertCount('queue', 3)
-        ->call('handleSort', $song_1->id, 3)
+        ->call('updateSongOrder', $list)
         ->assertHasNoErrors();
 
     expect(SongQueue::find($song_1->id)->position)->toBe(2);

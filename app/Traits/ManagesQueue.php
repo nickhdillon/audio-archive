@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
+use Closure;
 use Flux\Flux;
 use App\Enums\Repeat;
 use App\Models\SongQueue;
@@ -102,5 +103,20 @@ trait ManagesQueue
 		$user->update(['repeat' => $next]);
 
 		$this->dispatch('repeat-changed', value: $next);
+	}
+
+	/**
+     * @param array<int, array{order: int, value: string}> $list
+     * @param Closure $resolve_model
+     */
+	protected function updateSortablePositions(array $list, Closure $resolve_model): void
+	{
+		collect($list)->each(function (array $item) use ($resolve_model): void {
+			$model = $resolve_model($item);
+	
+			if (! $model) return;
+	
+			$model->update(['position' => $item['order']]);
+		});
 	}
 }
