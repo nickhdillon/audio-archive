@@ -752,7 +752,7 @@
         </div>
     </template>
 
-    <x-equalizer-modal />
+    {{-- <x-equalizer-modal /> --}}
 
 	<audio id="audio-player" crossorigin="anonymous" :src="currentPath" preload="metadata" class="hidden" />
 </div>
