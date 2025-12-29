@@ -102,6 +102,17 @@
                                     @endforeach
                                 </flux:menu.radio.group>
                             </flux:menu.submenu>
+
+                            <flux:modal.trigger name="equalizer">
+                                <button
+                                    class="flex w-full items-center gap-2 px-2.5 py-1.5 font-medium text-sm text-start rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-600 group"
+                                    type="button"
+                                >
+                                    <flux:icon.audio-lines class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
+                                    
+                                    <p>Equalizer</p>
+                                </button>
+                            </flux:modal.trigger>
                         </flux:menu>
                     </flux:dropdown>
                 </div>
@@ -681,6 +692,14 @@
                         </flux:modal>
                     </div>
 
+                    <div>
+                        <flux:modal.trigger name="equalizer">
+                            <flux:button variant="ghost" size="sm" class="hover:bg-transparent! cursor-pointer">
+                                <flux:icon.audio-lines class="size-[18px] text-neutral-800 dark:text-neutral-100" />
+                            </flux:button>
+                        </flux:modal.trigger>
+                    </div>
+
                     <div class="flex items-center w-full gap-2">
                         <flux:button variant="ghost" size="sm" class="hover:bg-transparent! cursor-pointer"
                             x-on:click="toggleMute()"
@@ -732,6 +751,8 @@
             </div>
         </div>
     </template>
+
+    <x-equalizer-modal />
 
 	<audio id="audio-player" crossorigin="anonymous" :src="currentPath" preload="metadata" class="hidden" />
 </div>

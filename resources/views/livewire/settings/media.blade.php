@@ -67,7 +67,13 @@ new class extends Component {
 
             <flux:separator />
 
-            <livewire:equalizer />
+            <div class="space-y-3">
+                <flux:subheading>Equalizer</flux:subheading>
+
+                <flux:card class="p-5 dark:bg-neutral-800!">
+                    <livewire:equalizer />
+                </flux:card>
+            </div>
         </div>
     </x-settings.layout>
 </section>
