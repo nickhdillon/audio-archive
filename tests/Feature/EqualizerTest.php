@@ -94,7 +94,7 @@ it('can set the preset to manual', function() {
         ->assertHasNoErrors();
 });
 
-it('can reset the preset and dispatch event', function() {
+it('can reset the preset', function() {
     $preset = Preset::BASS_BOOST;
 
     $preset_model = EqPreset::factory()->create([
