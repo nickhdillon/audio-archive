@@ -9,6 +9,7 @@
                         wire:model="files"
                         multiple
                         :allow-image-transform="false"
+                        maxParallelUploads="6"
                     />
     
                     <flux:error name="files" />
