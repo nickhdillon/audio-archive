@@ -61,16 +61,31 @@ class UploadAudio extends Component
 
                 $info = $get_ID3->analyze($path);
 
+                $album = data_get($info, "tags.{$prefix}.album.0");
+
+                if (Str::startsWith($album, 'Nkjv')) {
+                    $album = 'NKJV Word Of Promise';
+
+                    $title = Str::of(data_get($info, "tags.{$prefix}.title.0"))
+                        ->replaceMatches('/^\(Wop-\d+\)\s*/i', '')
+                        ->replaceMatches('/(\D)0+(\d+)$/', '$1$2')
+                        ->toString();
+
+                    $artist = $display_artist = 'Thomas Nelson';
+                }
+
                 return [
                     'user_id' => auth()->id(),
                     'filename' => Str::slug($filename) . ".{$extension}",
-                    'title' => data_get($info, "tags.{$prefix}.title.0", 'Unknown Title'),
-                    'album' => data_get($info, "tags.{$prefix}.album.0", 'Unknown Album'),
+                    'title' => $title ?: data_get($info, "tags.{$prefix}.title.0"),
+                    'album' => $album ?: data_get($info, "tags.{$prefix}.album.0", 'Unknown Album'),
                     'track_number' => Str::before(data_get($info, "tags.{$prefix}.track_number.0", '1/12'), '/'),
                     'playtime' => data_get($info, 'playtime_string', '3:30'),
-                    'artist' => $prefix === 'id3v2' ? data_get($info, "tags.id3v2.band.0", 'Unknown Artist')
-                        : data_get($info, "tags.quicktime.album_artist.0", 'Unknown Artist'),
-                    'display_artist' => data_get($info, "tags.{$prefix}.artist.0", 'Unknown Artist'),
+                    'artist' => $artist ?: ($prefix === 'id3v2'
+                            ? data_get($info, "tags.id3v2.band.0", 'Unknown Artist')
+                            : data_get($info, "tags.quicktime.album_artist.0", 'Unknown Artist')
+                        ),
+                    'display_artist' => $display_artist ?: data_get($info, "tags.{$prefix}.artist.0", 'Unknown Artist'),
                     'genre' => data_get($info, "tags.{$prefix}.genre.0", 'Metal'),
                     'created_at' => now(),
                     'updated_at' => now(),
