@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use App\Livewire\UploadAudio;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -13,6 +14,22 @@ beforeEach(function () {
     Storage::fake('s3');
     
     $this->actingAs(User::factory()->create());
+});
+
+it('can upload and submit an mp3 file for audio bible', function () {
+    $file = UploadedFile::fake()->image('1 Chronicles Chapter 1.mp3');
+
+    livewire(UploadAudio::class)
+        ->set('files', [$file])
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    $filename = Str::of($file->getClientOriginalName())
+        ->before('.')
+        ->slug()
+        ->toString();
+
+    $this->assertTrue(Storage::disk('s3')->exists("users-test/1/files/thomas-nelson/nkjv-word-of-promise/{$filename}.mp3"));
 });
 
 it('can upload and submit an mp3 file', function () {
