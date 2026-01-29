@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Enums\BibleBook;
 use getID3;
 use Flux\Flux;
 use App\Models\Song;
@@ -62,14 +63,36 @@ class UploadAudio extends Component
                 $info = $get_ID3->analyze($path);
 
                 if (Str::contains($filename, 'Chapter')) {
-                    $title = Str::of(data_get($info, "tags.{$prefix}.title.0"))
-                        ->replaceMatches('/^\(Wop-\d+\)\s*/i', '')
-                        ->replaceMatches('/(\D)0+(\d+)$/', '$1$2')
-                        ->toString();
+                    $artist = $display_artist = 'Thomas Nelson';
 
                     $album = 'NKJV Word Of Promise';
 
-                    $artist = $display_artist = 'Thomas Nelson';
+                    $testament = Str::after(data_get($info, "tags.{$prefix}.album.0"), 'Promise ');
+                    $testament_slug = Str::slug($testament);
+
+                    $book = Str::before($filename, ' Chapter');
+                    $book_slug = Str::slug($book);
+
+                    $sub_albums = [
+                        [
+                            'name' => $testament,
+                            'slug' => $testament_slug,
+                        ],
+                        [
+                            'name' => $book,
+                            'slug' => $book_slug,
+                            'order' => BibleBook::from($book)->order(),
+                        ],
+                    ];
+
+                    $title = Str::of(data_get($info, "tags.{$prefix}.title.0"))
+                        ->replaceMatches('/^\(Wop-\d+\)\s*/i', '')
+                        ->replaceMatches('/(\D)0+(\d+)$/', '$1$2')
+                        ->after($book)
+                        ->ltrim()
+                        ->toString();
+
+                    $filename = Str::slug($title);
                 }
 
                 return [
@@ -77,6 +100,7 @@ class UploadAudio extends Component
                     'filename' => Str::slug($filename) . ".{$extension}",
                     'title' => $title ?? data_get($info, "tags.{$prefix}.title.0", 'Unknown Title'),
                     'album' => $album ?? data_get($info, "tags.{$prefix}.album.0", 'Unknown Album'),
+                    'sub_albums' => $sub_albums ?? [],
                     'track_number' => Str::before(data_get($info, "tags.{$prefix}.track_number.0", '1/12'), '/'),
                     'playtime' => data_get($info, 'playtime_string', '3:30'),
                     'artist' => $artist ?? ($prefix === 'id3v2'
@@ -106,22 +130,49 @@ class UploadAudio extends Component
                     ],
                     ['name' => $meta['artist']]
                 );
-    
+
                 $album = Album::firstOrCreate(
                     [
                         'slug' => Str::slug($meta['album']),
                         'artist_id' => $artist->id,
                     ],
-                    ['name' => $meta['album']]
+                    [
+                        'name' => $meta['album'],
+                        'order' => null
+                    ]
                 );
+
+                $parent = $album;
+
+                $path_segments = [
+                    Str::slug($artist->name),
+                    Str::slug($album->name),
+                ];
+
+                if (! empty($meta['sub_albums'])) {
+                    foreach ($meta['sub_albums'] as $sub_album) {
+                        $parent = Album::firstOrCreate(
+                            [
+                                'slug' => $sub_album['slug'],
+                                'artist_id' => $artist->id,
+                                'parent_id' => $parent->id,
+                            ],
+                            [
+                                'name' => $sub_album['name'],
+                                'artwork_url' => $album->artwork_url,
+                                'order' => $sub_album['order'] ?? null,
+                            ]
+                        );
+
+                        $path_segments[] = Str::slug($sub_album['name']);
+                    }
+                }
 
                 $s3_path = (app()->isProduction() ? 'users/' : 'users-test/')
                     . auth()->id()
                     . '/files/'
-                    . Str::slug($artist->name)
-                    . '/'
-                    . Str::slug($album->name);
-                
+                    . implode('/', $path_segments);
+
                 $stored_path = $file->storePubliclyAs(
                     $s3_path,
                     $meta['filename'],
@@ -129,7 +180,7 @@ class UploadAudio extends Component
                 );
 
                 Song::create([
-                    'album_id' => $album->id,
+                    'album_id' => $parent->id,
                     'title' => $meta['title'],
                     'slug' => Str::slug($meta['title']),
                     'display_artist' => $meta['display_artist'],
@@ -141,8 +192,8 @@ class UploadAudio extends Component
             })->toArray();
 
         Flux::toast(
-            variant: 'success',
             text: 'Files successfully uploaded',
+            variant: 'success',
         );
 
         $this->redirectRoute('artists', navigate: true);

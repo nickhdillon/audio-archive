@@ -14,10 +14,23 @@ class Album extends Model
 
     protected $fillable = [
         'artist_id',
+        'parent_id',
         'name',
         'slug',
-        'artwork_url'
+        'artwork_url',
+        'order'
     ];
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Album::class, 'parent_id');
+    }
+
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Album::class, 'parent_id')->orderBy('order');
+    }
 
     public function artist(): BelongsTo
     {
