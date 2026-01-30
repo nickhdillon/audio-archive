@@ -25,6 +25,11 @@ class Artist extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function parentAlbums(): HasMany
+    {
+        return $this->hasMany(Album::class)->whereNull('parent_id')->orderBy('name');
+    }
+
     public function albums(): HasMany
     {
         return $this->hasMany(Album::class)->orderBy('name');

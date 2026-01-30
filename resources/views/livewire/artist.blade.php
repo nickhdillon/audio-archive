@@ -1,4 +1,4 @@
-<div class="space-y-4 mb-22" x-data="{ tab: $wire.entangle('tab') }">
+<div class="space-y-4 mb-22" x-data="{ tab: $wire.entangle('tab'), hasNestedAlbums: @js($has_nested_albums) }">
     <div class="flex flex-wrap items-center justify-between gap-3">
         <flux:heading size="xl">
             {{ $artist->name }}
@@ -11,12 +11,12 @@
                 >
                     <flux:icon.play class="size-[15px] stroke-neutral-50 dark:stroke-neutral-800 fill-neutral-100 dark:fill-neutral-800" />
                 </button>
-    
+
                 <button wire:click='playSongs(true)' class="hover:scale-110 cursor-pointer">
                     <flux:icon.shuffle class="size-[18px] stroke-[2.5px] text-neutral-800 dark:text-neutral-100" />
                 </button>
             </div>
-    
+
             <flux:input
                 icon="magnifying-glass"
                 placeholder="Search..."
@@ -29,7 +29,7 @@
 
     <div>
         <flux:tab.group>
-            <flux:tabs x-model="tab">
+            <flux:tabs x-model="tab" x-show="!hasNestedAlbums">
                 <flux:tab name="albums">Albums</flux:tab>
                 <flux:tab name="songs">Songs</flux:tab>
             </flux:tabs>
@@ -56,14 +56,18 @@
                                     <flux:icon.disc-2 class="text-neutral-400 inset-0 size-10" />
                                 @endif
                             </flux:button>
-            
+
                             <div class="flex flex-col w-40 truncate">
                                 <p class="text-sm truncate">
-                                    {{ Str::headline($album->name) }}
+                                    {{ Str::startsWith($album->name, 'NKJV') ? $album->name : Str::headline($album->name) }}
                                 </p>
-            
+
                                 <p class="text-xs text-neutral-600 dark:text-neutral-400">
-                                    {{ $album->songs_count }} {{ Str::plural('song', $album->songs_count) }}
+                                    @if ($album->children_count)
+                                        {{ $album->children_count }} {{ Str::plural('album', $album->children_count) }}
+                                    @else
+                                        {{ $album->songs_count }} {{ Str::plural('song', $album->songs_count) }}
+                                    @endif
                                 </p>
                             </div>
                         </div>
@@ -78,10 +82,10 @@
                             wire:key='{{ $song->id }}'
                         >
                             <button class="flex items-center text-left cursor-pointer flex-1 min-w-0 group gap-2.5"
-                                x-on:click="$dispatch('change-song', { song: 
+                                x-on:click="$dispatch('change-song', { song:
                                     @js([
                                         'id' => $song->id,
-                                        'title' => $song->title,
+                                        'title' => $song->album->is_bible_book ? "{$song->album} {$song->title}" : $song->title,
                                         'artist' => $song->display_artist,
                                         'path' => Storage::disk('s3')->url($song->path),
                                         'playtime' => $song->playtime,
@@ -101,17 +105,17 @@
                                         <flux:icon.music-2 class="text-neutral-400 size-5" />
                                     @endif
                                 </div>
-                
+
                                 <div class="flex flex-col truncate flex-1 min-w-0">
                                     <p class="text-sm duration-200 truncate ease-in-out group-hover:text-neutral-600 dark:group-hover:text-neutral-400">
                                         {{ $song->title }}
                                     </p>
-                
+
                                     <p class="flex items-center space-x-1 text-xs text-neutral-600 dark:text-neutral-400 truncate">
                                         <span>{{ $song->display_artist }}</span>
-                
+
                                         <span>·</span>
-                
+
                                         <span class="truncate">{{ Str::headline($song->album->name) }}</span>
                                     </p>
                                 </div>
@@ -122,7 +126,7 @@
                                     <flux:button variant="ghost" size="sm" class="hover:bg-transparent! -mr-1 w-2! cursor-pointer">
                                         <flux:icon.ellipsis-horizontal class="text-neutral-800 dark:text-neutral-100" />
                                     </flux:button>
-            
+
                                     <flux:menu>
                                         <flux:menu.submenu icon="plus-circle" heading="Add to playlist">
                                             <flux:menu.radio.group class="flex flex-col">
@@ -132,12 +136,12 @@
                                                         type="button"
                                                     >
                                                         <flux:icon.plus class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
-                                                    
+
                                                         <p>New playlist</p>
                                                     </button>
                                                 </flux:modal.trigger>
-                                                
-                                                @foreach ($playlists as $playlist) 
+
+                                                @foreach ($playlists as $playlist)
                                                     <button
                                                         class="px-2.5 py-1.5 font-medium text-sm text-start rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-600"
                                                         wire:click='addToPlaylist({{ $playlist->id }}, {{ $song->id }})'
@@ -147,7 +151,7 @@
                                                 @endforeach
                                             </flux:menu.radio.group>
                                         </flux:menu.submenu>
-            
+
                                         <flux:menu.item
                                             icon="list-plus"
                                             x-on:click="$dispatch('add-to-queue', { song_id: {{ $song->id }} })"
@@ -155,7 +159,7 @@
                                             Add to queue
                                         </flux:menu.item>
                                     </flux:menu>
-                                </flux:dropdown>                    
+                                </flux:dropdown>
                             </div>
                         </div>
                     @endforeach

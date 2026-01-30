@@ -17,7 +17,7 @@ class Artist extends Component implements PlaysSongs
     use ManagesQueue, ManagesPlaylist;
 
     public ModelsArtist $artist;
-    
+
     public string $search = '';
 
     public string $tab = 'albums';
@@ -36,8 +36,12 @@ class Artist extends Component implements PlaysSongs
     public function render(): View
     {
         return view('livewire.artist', [
+            'has_nested_albums' => $this->artist->albums()
+                ->whereHas('children')
+                ->exists(),
             'albums' => $this->artist->albums()
-                ->withCount('songs')
+                ->withCount(['children', 'songs'])
+                ->whereNull('parent_id')
                 ->when($this->tab === 'albums', function (Builder $query): void {
                     $query->where('name', 'like', "%{$this->search}%");
                 })

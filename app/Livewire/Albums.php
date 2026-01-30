@@ -20,6 +20,7 @@ class Albums extends Component
                 ->user()
                 ->albums()
                 ->with(['artist', 'songs'])
+                ->whereNull('parent_id')
                 ->when(Str::length($this->search) >= 1, function (Builder $query): void {
                     $query->where('albums.name', 'like', "%{$this->search}%");
                 })

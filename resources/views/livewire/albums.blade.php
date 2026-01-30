@@ -29,7 +29,7 @@
 
                 <div class="flex flex-col w-40 truncate">
                     <p class="text-sm truncate">
-                        {{ Str::headline($album->name) }}
+                        {{ Str::startsWith($album->name, 'NKJV') ? $album->name : Str::headline($album->name) }}
                     </p>
 
                     <p class="text-xs truncate text-neutral-600 dark:text-neutral-400">

@@ -14,7 +14,7 @@
                         class="object-cover inset-0 rounded-[3px] w-full"
                         loading='lazy'
                     />
-                
+
                     <flux:icon.music-2 x-cloak x-show="!currentArtwork" class="text-neutral-400 size-4" />
                 </div>
 
@@ -67,11 +67,11 @@
                 <div class="flex w-8 justify-center">
                     <flux:icon.chevron-down x-on:click="expanded = false" />
                 </div>
-            
+
                 <div class="flex-1 text-center truncate">
                     <p x-text="currentAlbum" class="text-xs font-medium truncate"></p>
                 </div>
-            
+
                 <div class="flex w-8 justify-center">
                     <flux:dropdown>
                         <flux:button variant="ghost" size="sm" class="hover:bg-transparent! -mr-1 w-2! cursor-pointer">
@@ -86,7 +86,7 @@
                                         type="button"
                                     >
                                         <flux:icon.plus class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
-                
+
                                         <p>New playlist</p>
                                     </button>
                                 </flux:modal.trigger>
@@ -109,7 +109,7 @@
                                     type="button"
                                 >
                                     <flux:icon.audio-lines class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
-                                    
+
                                     <p>Equalizer</p>
                                 </button>
                             </flux:modal.trigger>
@@ -117,7 +117,7 @@
                     </flux:dropdown>
                 </div>
             </div>
-    
+
             <div class="flex-1 flex items-start justify-center px-6 pt-4">
                 <div class="w-full space-y-6 max-w-sm mx-auto">
                     <div
@@ -136,7 +136,7 @@
                             class="absolute inset-0 w-full h-full object-cover rounded-[10px]"
                             loading="lazy"
                         />
-                
+
                         <flux:icon.music-2
                             x-cloak
                             x-show="!currentArtwork"
@@ -149,7 +149,7 @@
                         <p x-text="currentArtist" class="text-sm truncate text-neutral-600 dark:text-neutral-400"></p>
                     </div>
 
-                    <div class="flex flex-col -space-y-1 text-neutral-800 dark:text-neutral-100 w-full text-[11px] items-center">    
+                    <div class="flex flex-col -space-y-1 text-neutral-800 dark:text-neutral-100 w-full text-[11px] items-center">
                         <div class="relative w-full h-6 group cursor-pointer"
                             x-on:touchstart="startDrag($event)"
                             x-on:click="seek($event)"
@@ -161,7 +161,7 @@
                                     :style="`width: ${displayProgress}%;`">
                                 </div>
                             </div>
-        
+
                             <div class="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg pointer-events-none"
                                 :style="`left: calc(${displayProgress}% - .4rem)`">
                             </div>
@@ -183,29 +183,29 @@
                                 ])
                             />
 
-                            @if (auth()->user()->shuffle) 
+                            @if (auth()->user()->shuffle)
                                 <div class="absolute -bottom-1.5 mr-0.5 h-1 w-1 rounded-full bg-green-400"></div>
                             @endif
                         </div>
-        
+
                         <flux:icon.skip-back x-on:click="playPrevious()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-6" />
-        
+
                         <button x-on:click="toggle()" class="focus:outline-none cursor-pointer">
                             <div class="bg-neutral-800 dark:bg-neutral-100 flex items-center justify-center rounded-full size-10">
                                 <template x-if="!playing">
                                     <flux:icon.play class="size-[24px] stroke-neutral-100 fill-neutral-100 dark:stroke-neutral-800! dark:fill-neutral-800!" />
                                 </template>
-        
+
                                 <template x-if="playing">
                                     <flux:icon.pause class="size-[24px] stroke-neutral-100 fill-neutral-100 dark:stroke-neutral-800! dark:fill-neutral-800!" />
                                 </template>
                             </div>
                         </button>
-        
+
                         <flux:icon.skip-forward x-on:click="playNext()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-6" />
-        
+
                         <div class="relative flex items-center justify-center">
-                            @if (auth()->user()->repeat !== Repeat::ONE) 
+                            @if (auth()->user()->repeat !== Repeat::ONE)
                                 <flux:icon.repeat
                                     wire:click='repeat'
                                     @class([
@@ -220,7 +220,7 @@
                                 />
                             @endif
 
-                            @if (auth()->user()->repeat !== Repeat::OFF) 
+                            @if (auth()->user()->repeat !== Repeat::OFF)
                                 <div class="absolute -bottom-1.5 h-1 w-1 rounded-full bg-green-400"></div>
                             @endif
                         </div>
@@ -234,7 +234,7 @@
                                 <template x-if="muted">
                                     <flux:icon.speaker-x-mark class="size-[20px] text-neutral-800 dark:text-neutral-100" />
                                 </template>
-                            
+
                                 <template x-if="!muted">
                                     <flux:icon.speaker-wave class="size-[20px] text-neutral-800 dark:text-neutral-100" />
                                 </template>
@@ -247,13 +247,13 @@
                                     <flux:icon.queue-list class="size-[20px] text-neutral-800 dark:text-neutral-100" />
                                 </flux:button>
                             </flux:modal.trigger>
-        
+
                             <flux:modal name="queue-mobile" flyout position="bottom" class="h-[85%] w-full rounded-t-2xl">
                                 <div class="space-y-6 text-xs">
                                     <flux:heading x-show="queue.length < 1" class="mb-2 text-sm">
                                         Queue is empty
                                     </flux:heading>
-        
+
                                     <div x-show="queue.length > 0 && currentPath" class="space-y-6">
                                         <div
                                             class="space-y-3"
@@ -262,7 +262,7 @@
                                         >
                                             <div x-show="currentPath">
                                                 <flux:heading class="mb-2 text-sm">Now Playing</flux:heading>
-        
+
                                                 <div class="flex items-center justify-between gap-6">
                                                     <div class="flex items-center gap-2.5 truncate">
                                                         <div class="size-9 bg-neutral-100 dark:bg-neutral-800 rounded border border-neutral-300 dark:border-neutral-700 shadow-xs shadow-black/10 dark:shadow-black/20 flex items-center justify-center">
@@ -273,23 +273,23 @@
                                                                 class="object-cover inset-0 rounded-[3px] w-full"
                                                                 loading='lazy'
                                                             />
-                                                    
+
                                                             <flux:icon.music-2 x-cloak x-show="!currentArtwork" class="text-neutral-400 size-4" />
                                                         </div>
-        
+
                                                         <div class="flex flex-col flex-1 min-w-0">
                                                             <p class="font-medium text-accent truncate" x-text="currentTitle"></p>
-        
+
                                                             <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate" x-text="currentArtist"></p>
                                                         </div>
                                                     </div>
-        
+
                                                     <div>
                                                         <flux:dropdown>
                                                             <flux:button variant="ghost" size="sm" class="hover:bg-transparent! -mr-1 w-2! cursor-pointer">
                                                                 <flux:icon.ellipsis-horizontal class="text-neutral-800 dark:text-neutral-100" />
                                                             </flux:button>
-        
+
                                                             <flux:menu>
                                                                 <flux:menu.submenu icon="plus-circle" heading="Add to playlist">
                                                                     <flux:modal.trigger name="add-playlist">
@@ -298,11 +298,11 @@
                                                                             type="button"
                                                                         >
                                                                             <flux:icon.plus class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
-                                                    
+
                                                                             <p>New playlist</p>
                                                                         </button>
                                                                     </flux:modal.trigger>
-        
+
                                                                     <flux:menu.radio.group class="flex flex-col">
                                                                         @foreach ($playlists as $playlist)
                                                                             <button
@@ -319,7 +319,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-        
+
                                             <flux:heading
                                                 x-cloak
                                                 x-show="queue.length > 0 && currentIndex < queue.length - 1"
@@ -327,7 +327,7 @@
                                             >
                                                 Up Next
                                             </flux:heading>
-        
+
                                             @foreach ($this->queue() as $song)
                                                 <div class="flex items-center gap-6"
                                                     x-show="{{ $loop->index }} > currentIndex"
@@ -337,7 +337,7 @@
                                                     <span class="cursor-move" wire:sortable.handle>
                                                         <flux:icon.text-align-justify class="cursor-move size-4 -mr-3 dark:text-neutral-100" />
                                                     </span>
-        
+
                                                     <button
                                                         x-on:click="changeSongByIndex({{ $loop->index }})"
                                                         class="flex flex-1 min-w-0 text-left cursor-pointer items-center group gap-2.5"
@@ -349,23 +349,23 @@
                                                                 <flux:icon.music-2 class="text-neutral-400 size-4" />
                                                             @endif
                                                         </div>
-                            
+
                                                         <div class="flex flex-col flex-1 min-w-0">
                                                             <p class="duration-200 ease-in-out truncate group-hover:text-neutral-600 dark:group-hover:text-neutral-400">
                                                                 {{ $song['title'] }}
                                                             </p>
-        
+
                                                             <p class="text-xs font-normal text-neutral-600 dark:text-neutral-400 truncate">
                                                                 {{ $song['artist'] }}
                                                             </p>
                                                         </div>
                                                     </button>
-        
+
                                                     <flux:dropdown>
                                                         <flux:button variant="ghost" size="sm" class="hover:bg-transparent! -mr-1 w-2! cursor-pointer">
                                                             <flux:icon.ellipsis-horizontal class="text-neutral-800 dark:text-neutral-100" />
                                                         </flux:button>
-                            
+
                                                         <flux:menu>
                                                             <flux:menu.submenu icon="plus-circle" heading="Add to playlist">
                                                                 <flux:modal.trigger name="add-playlist">
@@ -374,11 +374,11 @@
                                                                         type="button"
                                                                     >
                                                                         <flux:icon.plus class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
-                                                
+
                                                                         <p>New playlist</p>
                                                                     </button>
                                                                 </flux:modal.trigger>
-        
+
                                                                 <flux:menu.radio.group class="flex flex-col">
                                                                     @foreach ($playlists as $playlist)
                                                                         <button
@@ -390,7 +390,7 @@
                                                                     @endforeach
                                                                 </flux:menu.radio.group>
                                                             </flux:menu.submenu>
-        
+
                                                             <flux:menu.item
                                                                 variant="danger"
                                                                 icon="trash"
@@ -428,7 +428,7 @@
                             class="object-cover inset-0 rounded-[3px] w-full"
                             loading='lazy'
                         />
-                    
+
                         <flux:icon.music-2 x-cloak x-show="!currentArtwork" class="text-neutral-400 size-6" />
                     </div>
 
@@ -436,7 +436,7 @@
                         <p class="truncate text-neutral-800 dark:text-neutral-100"
                             x-text="currentTitle">
                         </p>
-                        
+
                         <p class="text-neutral-500 dark:text-neutral-300 truncate"
                             x-text="currentArtist">
                         </p>
@@ -454,7 +454,7 @@
                                 ])
                             />
 
-                            @if (auth()->user()->shuffle) 
+                            @if (auth()->user()->shuffle)
                                 <div class="absolute -bottom-1 size-[2.5px] mr-0.5 rounded-full bg-green-400"></div>
                             @endif
                         </div>
@@ -476,7 +476,7 @@
                         <flux:icon.skip-forward x-on:click="playNext()" class="cursor-pointer text-neutral-800 fill-neutral-800 dark:text-neutral-100 dark:fill-neutral-100 size-4" />
 
                         <div class="relative flex items-center justify-center">
-                            @if (auth()->user()->repeat !== Repeat::ONE) 
+                            @if (auth()->user()->repeat !== Repeat::ONE)
                                 <flux:icon.repeat
                                     wire:click='repeat'
                                     @class([
@@ -491,7 +491,7 @@
                                 />
                             @endif
 
-                            @if (auth()->user()->repeat !== Repeat::OFF) 
+                            @if (auth()->user()->repeat !== Repeat::OFF)
                                 <div class="absolute -bottom-1 size-[2.5px] rounded-full bg-green-400"></div>
                             @endif
                         </div>
@@ -499,7 +499,7 @@
 
                     <div class="flex text-neutral-800 dark:text-neutral-100 w-full text-[11px] items-center gap-[10px]">
                         <p class="w-[30px] text-right" x-text="currentTimeDisplay"></p>
-                        
+
                         <div class="relative w-full h-6 group cursor-pointer"
                             x-on:mousedown="startDrag($event)"
                             x-on:click="seek($event)"
@@ -554,7 +554,7 @@
                                                             class="object-cover inset-0 rounded-[3px] w-full"
                                                             loading='lazy'
                                                         />
-                                                
+
                                                         <flux:icon.music-2 x-cloak x-show="!currentArtwork" class="text-neutral-400 size-4" />
                                                     </div>
 
@@ -579,7 +579,7 @@
                                                                         type="button"
                                                                     >
                                                                         <flux:icon.plus class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
-                                                
+
                                                                         <p>New playlist</p>
                                                                     </button>
                                                                 </flux:modal.trigger>
@@ -630,7 +630,7 @@
                                                             <flux:icon.music-2 class="text-neutral-400 size-4" />
                                                         @endif
                                                     </div>
-                        
+
                                                     <div class="flex flex-col flex-1 min-w-0">
                                                         <p class="duration-200 ease-in-out truncate group-hover:text-neutral-600 dark:group-hover:text-neutral-400">
                                                             {{ $song['title'] }}
@@ -646,7 +646,7 @@
                                                     <flux:button variant="ghost" size="sm" class="hover:bg-transparent! -mr-1 w-2! cursor-pointer">
                                                         <flux:icon.ellipsis-horizontal class="text-neutral-800 dark:text-neutral-100" />
                                                     </flux:button>
-                        
+
                                                     <flux:menu>
                                                         <flux:menu.submenu icon="plus-circle" heading="Add to playlist">
                                                             <flux:modal.trigger name="add-playlist">
@@ -655,7 +655,7 @@
                                                                     type="button"
                                                                 >
                                                                     <flux:icon.plus class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
-                                            
+
                                                                     <p>New playlist</p>
                                                                 </button>
                                                             </flux:modal.trigger>
@@ -707,7 +707,7 @@
                             <template x-if="muted">
                                 <flux:icon.speaker-x-mark class="size-[18px] text-neutral-800 dark:text-neutral-100" />
                             </template>
-                        
+
                             <template x-if="!muted">
                                 <flux:icon.speaker-wave class="size-[18px] text-neutral-800 dark:text-neutral-100" />
                             </template>
@@ -727,7 +727,7 @@
                                         type="button"
                                     >
                                         <flux:icon.plus class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
-                                
+
                                         <p>New playlist</p>
                                     </button>
                                 </flux:modal.trigger>
@@ -735,7 +735,7 @@
 
                             <flux:menu.group>
                                 <flux:menu.radio.group class="flex flex-col">
-                                    @foreach ($playlists as $playlist) 
+                                    @foreach ($playlists as $playlist)
                                         <button
                                             class="px-2.5 py-1.5 font-medium text-sm text-start rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-600"
                                             x-on:click='$wire.addToPlaylist({{ $playlist->id }}, queue[currentIndex].song_id)'
@@ -910,6 +910,7 @@
                         const currentSongId = this.queue[this.currentIndex]?.id;
 
                         this.queue = e.detail.queue;
+                        console.log(this.queue);
 
                         const newIndex = this.queue.findIndex(s => s.id === currentSongId);
 
@@ -1085,7 +1086,7 @@
 
                     localStorage.setItem(this.keys.muted, this.muted);
                 },
-                
+
                 seek(event) {
                     if (!this.audio?.duration) return;
 

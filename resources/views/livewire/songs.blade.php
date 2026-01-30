@@ -25,10 +25,10 @@
         @foreach ($songs as $song)
             <div class="flex items-center justify-between py-3 gap-4 first:pt-0 last:pb-0">
                 <button class="flex text-left flex-1 min-w-0 cursor-pointer items-center group gap-2.5"
-                    x-on:click="$dispatch('change-song', { song: 
+                    x-on:click="$dispatch('change-song', { song:
                         @js([
                             'id' => $song->id,
-                            'title' => $song->title,
+                            'title' => $song->album->is_bible_book ? "{$song->album->name} {$song->title}" : $song->title,
                             'artist' => $song->display_artist,
                             'path' => Storage::disk('s3')->url($song->path),
                             'playtime' => $song->playtime,
@@ -51,7 +51,7 @@
 
                     <div class="flex flex-col flex-1 min-w-0">
                         <p class="text-sm truncate duration-200 ease-in-out group-hover:text-neutral-600 dark:group-hover:text-neutral-400">
-                            {{ $song->title }}
+                            {{ $song->album->is_bible_book ? "{$song->album->name} {$song->title}" : $song->title }}
                         </p>
 
                         <p class="text-xs space-x-0.5 text-neutral-600 dark:text-neutral-400 truncate">
@@ -59,7 +59,7 @@
 
                             <span>·</span>
 
-                            <span>{{ $song->album->name }}</span>
+                            <span>{{ $song->album->is_bible_book ? 'NKJV Word Of Promise' : $song->album->name }}</span>
                         </p>
                     </div>
                 </button>
@@ -78,13 +78,13 @@
                                         type="button"
                                     >
                                         <flux:icon.plus class="text-neutral-400 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-100 size-4.5 stroke-2" />
-                                    
+
                                         <p>New playlist</p>
                                     </button>
                                 </flux:modal.trigger>
 
                                 <flux:menu.radio.group class="flex flex-col">
-                                    @foreach ($playlists as $playlist) 
+                                    @foreach ($playlists as $playlist)
                                         <button
                                             class="px-2.5 py-1.5 font-medium text-sm text-start rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-600"
                                             wire:click='addToPlaylist({{ $playlist->id }}, {{ $song->id }})'
@@ -102,7 +102,7 @@
                                 Add to queue
                             </flux:menu.item>
                         </flux:menu>
-                    </flux:dropdown>                    
+                    </flux:dropdown>
                 </div>
             </div>
         @endforeach

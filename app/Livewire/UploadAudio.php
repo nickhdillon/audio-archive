@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Enums\BibleBook;
 use getID3;
 use Flux\Flux;
 use App\Models\Song;
 use App\Models\Album;
 use App\Models\Artist;
 use Livewire\Component;
+use App\Enums\BibleBook;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Illuminate\Contracts\View\View;

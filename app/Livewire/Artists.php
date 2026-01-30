@@ -19,7 +19,7 @@ class Artists extends Component
             'artists' => auth()
                 ->user()
                 ->artists()
-                ->withCount(['albums', 'songs'])
+                ->withCount(['parentAlbums as albums_count', 'songs'])
                 ->when(Str::length($this->search) >= 1, function (Builder $query): void {
                     $query->where('name', 'like', "%{$this->search}%");
                 })

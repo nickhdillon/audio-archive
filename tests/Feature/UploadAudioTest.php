@@ -12,7 +12,7 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function () {
     Storage::fake('s3');
-    
+
     $this->actingAs(User::factory()->create());
 });
 
@@ -21,13 +21,23 @@ it('can upload and submit an mp3 file for audio bible', function () {
 
     livewire(UploadAudio::class)
         ->set('files', [$file])
+        ->set('metadata', [[
+            'artist' => 'Thomas Nelson',
+            'album' => 'NKJV Word Of Promise',
+            'sub_albums' => [
+                ['name' => 'Old Testament', 'slug' => 'old-testament', 'order' => 1],
+                ['name' => '1 Chronicles', 'slug' => '1-chronicles', 'order' => 1],
+            ],
+            'title' => 'Chapter 1',
+            'filename' => 'chapter-1.mp3',
+            'track_number' => 1,
+            'playtime' => '3:00',
+            'display_artist' => 'Thomas Nelson',
+        ]])
         ->call('submit')
         ->assertHasNoErrors();
 
-    $filename = Str::of($file->getClientOriginalName())
-        ->before('.')
-        ->slug()
-        ->toString();
+    $filename = 'old-testament/1-chronicles/chapter-1';
 
     $this->assertTrue(Storage::disk('s3')->exists("users-test/1/files/thomas-nelson/nkjv-word-of-promise/{$filename}.mp3"));
 });

@@ -23,7 +23,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('playlists', Playlists::class)->name('playlists');
     Route::get('playlists/{playlist:slug}', Playlist::class)->name('playlist');
-    
+
     Route::get('/upload-audio', UploadAudio::class)->name('upload');
 
     Route::redirect('settings', 'settings/profile');

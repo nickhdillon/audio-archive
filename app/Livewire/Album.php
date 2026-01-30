@@ -7,11 +7,11 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use App\Traits\ManagesQueue;
-use App\Traits\ManagesPlaylist;
 use App\Interfaces\PlaysSongs;
+use App\Traits\ManagesPlaylist;
 use Illuminate\Contracts\View\View;
 use App\Models\Album as ModelsAlbum;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class Album extends Component implements PlaysSongs
 {
@@ -24,9 +24,7 @@ class Album extends Component implements PlaysSongs
     public function playSongs(bool $shuffle = false): void
     {
         $this->play(
-            songs: $this->album->songs()
-                ->orderBy('track_number')
-                ->pluck('id'),
+            songs: $this->album->orderedSongs()->pluck('id'),
             source: 'playlist',
             shuffle: $shuffle
         );
@@ -34,17 +32,23 @@ class Album extends Component implements PlaysSongs
 
     public function render(): View
     {
-        $this->album->loadMissing(['artist', 'songs']);
+        $this->album->loadMissing(['artist', 'songs.album:id,name,artwork_url', 'children']);
+
+        $child_albums = $this->album->children()
+            ->withCount(['children', 'songs'])
+            ->when(Str::length($this->search), function (Builder $query): void {
+                $query->where('name', 'like', "%{$this->search}%");
+            })
+            ->orderBy('order')
+            ->get();
+
+        $has_bible_books = $child_albums->contains(fn(ModelsAlbum $child): bool => $child->is_bible_book);
 
         return view('livewire.album', [
-            'songs' => $this->album
-                ->songs()
-                ->with('album:id,name,artwork_url')
-                ->when(Str::length($this->search) >= 1, function (Builder $query): void {
-                    $query->where('title', 'like', "%{$this->search}%");
-                })
-                ->orderBy('track_number')
-                ->get()
+            'breadcrumbs' => $this->album->breadcrumbs(),
+            'songs' => $this->album->orderedSongs($this->search),
+            'child_albums' => $child_albums,
+            'has_bible_books' => $has_bible_books
         ]);
     }
 }

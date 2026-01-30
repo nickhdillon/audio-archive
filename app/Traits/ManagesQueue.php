@@ -42,8 +42,9 @@ trait ManagesQueue
             ->map(function (SongQueue $item) use ($disk): array {
                 return [
                     'id' => $item->id,
-                    'title' => $item->song->title,
+                    'title' => $item->song->album->is_bible_book ? "{$item->song->album->name} {$item->song->title}" : $item->song->title,
                     'artist' => $item->song->display_artist,
+                    'album' => $item->song->album->name,
                     'path' => $disk->url($item->song->path),
                     'playtime' => $item->song->playtime,
                     'artwork' => $disk->url($item->song->album->artwork_url),
@@ -113,9 +114,9 @@ trait ManagesQueue
 	{
 		collect($list)->each(function (array $item) use ($resolve_model): void {
 			$model = $resolve_model($item);
-	
+
 			if (! $model) return;
-	
+
 			$model->update(['position' => $item['order']]);
 		});
 	}
