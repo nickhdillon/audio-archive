@@ -10,6 +10,7 @@ use App\Livewire\Playlist;
 use App\Livewire\Playlists;
 use App\Livewire\UploadAudio;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UploadController;
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('/', '/artists');
@@ -25,6 +26,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('playlists/{playlist:slug}', Playlist::class)->name('playlist');
 
     Route::get('/upload-audio', UploadAudio::class)->name('upload');
+
+    Route::post('/filepond/upload', [UploadController::class, 'process'])->name('filepond.upload');
+    Route::delete('/filepond/revert', [UploadController::class, 'revert'])->name('filepond.revert');
 
     Route::redirect('settings', 'settings/profile');
 

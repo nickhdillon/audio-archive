@@ -14,8 +14,8 @@ use App\Enums\BibleBook;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Storage;
 use Spatie\LivewireFilepond\WithFilePond;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class UploadAudio extends Component
 {
@@ -38,29 +38,23 @@ class UploadAudio extends Component
         ];
     }
 
-    public function validateUploadedFile(): bool
-    {
-        $this->validate();
-
-        return true;
-    }
-
     public function updatedFiles(): void
     {
+        $local_disk = Storage::disk('local');
+
         $get_ID3 = new getID3;
 
         $this->metadata = collect($this->files)
-            ->map(function (TemporaryUploadedFile $file) use ($get_ID3): array {
-                $path = $file->getRealPath();
-                $extension = $file->getClientOriginalExtension();
-                $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            ->map(function (string $file) use ($local_disk, $get_ID3): array {
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                $filename = pathinfo($file, PATHINFO_FILENAME);
 
                 $prefix = match ($extension) {
                     'mp3' => 'id3v2',
                     'm4a' => 'quicktime',
                 };
 
-                $info = $get_ID3->analyze($path);
+                $info = $get_ID3->analyze($local_disk->path($file));
 
                 if (Str::contains($filename, 'Chapter')) {
                     $artist = $display_artist = 'Thomas Nelson';
@@ -119,8 +113,12 @@ class UploadAudio extends Component
 
     public function submit(): void
     {
+        $s3_disk = Storage::disk('s3');
+        $local_disk = Storage::disk('local');
+
         collect($this->files)
-            ->map(function (TemporaryUploadedFile $file, int $index): void {
+            ->each(function (string $file, int $index) use ($s3_disk, $local_disk): void {
+                $file = $local_disk->path($file);
                 $meta = $this->metadata[$index];
 
                 $artist = Artist::firstOrCreate(
@@ -173,10 +171,11 @@ class UploadAudio extends Component
                     . '/files/'
                     . implode('/', $path_segments);
 
-                $stored_path = $file->storePubliclyAs(
-                    $s3_path,
-                    $meta['filename'],
-                    's3',
+                $stored_path = $s3_disk->putFileAs(
+                    path: $s3_path,
+                    file: $file,
+                    name: $meta['filename'],
+                    options: 'public'
                 );
 
                 Song::create([
