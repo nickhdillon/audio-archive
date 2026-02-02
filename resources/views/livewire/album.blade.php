@@ -13,7 +13,7 @@
                             :href="!$loop->last ? route('album', $crumb) : ''"
                         >
                             <p @class([
-                                'max-w-10 sm:max-w-none truncate' => $loop->last,
+                                'max-w-10 sm:max-w-none truncate' => Str::endsWith($crumb->parent?->name, 'Testament'),
                                 'text-nowrap' => !$loop->last
                             ])>
                                 {{ $crumb->name }}
