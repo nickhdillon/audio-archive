@@ -27,7 +27,7 @@ enum BibleBook: string
     case PSALMS = 'Psalms';
     case PROVERBS = 'Proverbs';
     case ECCLESIASTES = 'Ecclesiastes';
-    case SONG_OF_SOLOMON = 'Song of Solomon';
+    case SONG_OF_SOLOMON = 'Song Of Solomon';
     case ISAIAH = 'Isaiah';
     case JEREMIAH = 'Jeremiah';
     case LAMENTATIONS = 'Lamentations';
